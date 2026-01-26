@@ -225,22 +225,64 @@ export default function HomePage() {
         </div>
       </footer>
 
-      {/* MODAL CONTACT */}
+      {/* MODAL CONTACT AVEC ENVOI RÉEL */}
       {showPopup && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-sm" onClick={() => setShowPopup(false)}></div>
+          
           <div className="bg-white text-slate-900 w-full max-w-lg p-12 rounded-[3rem] relative z-10 shadow-2xl border-t-[10px] border-slate-900 animate-in zoom-in duration-200">
             <h3 className="text-4xl font-black uppercase tracking-tighter mb-4 leading-none">VOTRE PROJET.</h3>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-10">On vous rappelle pour valider les détails.</p>
-            <div className="space-y-4">
-              <input type="text" placeholder="MAIL OU TÉLÉPHONE" className="w-full border-2 border-slate-100 p-6 rounded-2xl font-black uppercase text-xs outline-none focus:border-slate-900 transition-all" />
-              <textarea placeholder="VOTRE PROJET EN QUELQUES MOTS..." rows={3} className="w-full border-2 border-slate-100 p-6 rounded-2xl font-black uppercase text-xs outline-none focus:border-slate-900 transition-all" />
-              <button className="w-full bg-slate-900 text-white py-6 rounded-2xl font-black uppercase text-xs tracking-[0.3em] hover:invert transition-all">ENVOYER LA DEMANDE</button>
-            </div>
-            <button onClick={() => setShowPopup(false)} className="absolute top-8 right-10 font-black text-slate-200 hover:text-slate-900 transition-all uppercase text-[9px] tracking-widest">FERMER</button>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-10">
+              Laissez vos coordonnées pour recevoir votre devis officiel.
+            </p>
+
+            {/* FORMULAIRE FORMSPREE */}
+            <form 
+              action="https://formspree.io/f/xwvobjgj" // <--- REMPLACE TON_ID_ICI PAR CELUI DE FORMSPREE
+              method="POST"
+              className="space-y-4"
+            >
+              {/* On ajoute des champs cachés pour recevoir le détail du devis dans le mail ! */}
+              <input type="hidden" name="Produit" value={produit.nom} />
+              <input type="hidden" name="Quantité" value={quantite} />
+              <input type="hidden" name="Estimation_Total" value={`${totalTTC.toFixed(2)}€`} />
+              <input type="hidden" name="Prix_Unitaire" value={`${prixUnitaireTTC.toFixed(2)}€`} />
+
+              <div>
+                <input 
+                  type="text" 
+                  name="Contact" 
+                  required
+                  placeholder="VOTRE MAIL OU TÉLÉPHONE" 
+                  className="w-full border-2 border-slate-100 p-6 rounded-2xl font-black uppercase text-xs outline-none focus:border-slate-900 transition-all placeholder:text-slate-300" 
+                />
+              </div>
+
+              <div>
+                <textarea 
+                  name="Message" 
+                  placeholder="VOTRE PROJET EN QUELQUES MOTS (COULEURS, LOGOS...)" 
+                  rows={3} 
+                  className="w-full border-2 border-slate-100 p-6 rounded-2xl font-black uppercase text-xs outline-none focus:border-slate-900 transition-all placeholder:text-slate-300" 
+                />
+              </div>
+
+              <button 
+                type="submit"
+                className="w-full bg-slate-900 text-white py-6 rounded-2xl font-black uppercase text-xs tracking-[0.3em] hover:invert transition-all shadow-xl"
+              >
+                ENVOYER LA DEMANDE
+              </button>
+            </form>
+
+            <button 
+              onClick={() => setShowPopup(false)} 
+              className="absolute top-8 right-10 font-black text-slate-200 hover:text-slate-900 transition-all uppercase text-[9px] tracking-widest"
+            >
+              FERMER
+            </button>
           </div>
         </div>
       )}
-    </div>
   );
 }
