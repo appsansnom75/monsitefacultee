@@ -1,13 +1,12 @@
 'use client';
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // --- DONNÉES DE PRIX ---
 const PRODUITS = [
-  { id: 'tshirt', nom: 'T-shirt Bio', prixBase: 2.50, img: '👕' },
-  { id: 'hoodie', nom: 'Sweat à capuche', prixBase: 7.47, img: '🧥' },
-  { id: 'sweat', nom: 'Sweat col rond', prixBase: 5.50, img: '👕' },
-  { id: 'totebag', nom: 'Tote bag coton', prixBase: 1.00, img: '👜' },
-  { id: 'autres', nom: 'Autres', prixBase: 0, img: '📦' },
+  { id: 'TSHIRT', nom: 'TSHIRT BIO', prixBase: 2.50, img: '👕' },
+  { id: 'HOODIE', nom: 'SWEAT À CAPUCHE', prixBase: 7.47, img: '🧥' },
+  { id: 'SWEAT', nom: 'SWEAT COL ROND', prixBase: 5.50, img: '👕' },
+  { id: 'TOTEBAG', nom: 'TOTE BAG COTON', prixBase: 1.00, img: '👜' },
 ];
 
 const FORFAITS_SERIGRAPHIE = [
@@ -24,183 +23,185 @@ const FORFAITS_TRANSFERT = [
 ];
 
 const FORFAITS_BRODERIE = [
-  { qte: 10, emplacements: [69.2, 154.3, 165.8] },
+  { qte: 10, emplacements: [69.2, 154.3, 165.8] }, // Coeur, Central, Dos
   { qte: 20, emplacements: [98.4, 268.6, 291.6] },
   { qte: 50, emplacements: [156.50, 603, 659.5] },
   { qte: 100, emplacements: [241, 1110, 1217] },
   { qte: 200, emplacements: [442, 2180, 2394] },
 ];
 
-const EMPLACEMENTS = ['Cœur', 'Central', 'Dos', 'Manche'];
+const EMPLACEMENTS = ['COEUR', 'CENTRAL', 'DOS', 'MANCHE'];
 
 export default function ConfigurateurFacultee() {
   const [produitId, setProduitId] = useState(PRODUITS[0].id);
   const [quantite, setQuantite] = useState(10);
-  const contactRef = useRef<HTMLDivElement>(null); // Pour la redirection
+  const [showPopup, setShowPopup] = useState(false);
 
-  const [hasSerigraphie, setHasSerigraphie] = useState(false);
-  const [nbCouleursSeri, setNbCouleursSeri] = useState(0);
-  const [placeSeri, setPlaceSeri] = useState('Cœur');
-
-  const [hasNumerique, setHasNumerique] = useState(false);
-  const [placeNum, setPlaceNum] = useState('Cœur');
-
-  const [hasBroderie, setHasBroderie] = useState(false);
-  const [placeBroderieIdx, setPlaceBroderieIdx] = useState(0);
+  // Sélections multiples pour Sérigraphie
+  const [seriChoices, setSeriChoices] = useState<{place: string, colors: number}[]>([]);
+  // Sélections multiples pour Numérique
+  const [numChoices, setNumChoices] = useState<string[]>([]);
+  // Sélections multiples pour Broderie (on stocke l'index du type : 0=coeur, 1=central, 2=dos)
+  const [broderieChoices, setBroderieChoices] = useState<number[]>([]);
 
   const produit = PRODUITS.find(p => p.id === produitId) || PRODUITS[0];
 
-  // Gestion du clic sur "Autres"
-  const handleSelectProduit = (id: string) => {
-    if (id === 'autres') {
-      contactRef.current?.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      setProduitId(id);
-    }
-  };
+  // Fonctions de calcul
+  const getPalier = (arr: any[]) => [...arr].reverse().find(f => quantite >= f.qte) || arr[0];
 
-  const palierIdx = (arr: any[]) => [...arr].reverse().find(f => quantite >= f.qte) || arr[0];
+  const totalSerigraphie = seriChoices.reduce((acc, curr) => acc + getPalier(FORFAITS_SERIGRAPHIE).couleurs[curr.colors], 0);
+  const totalNumerique = numChoices.length * getPalier(FORFAITS_TRANSFERT).prix;
+  const totalBroderie = broderieChoices.reduce((acc, curr) => acc + getPalier(FORFAITS_BRODERIE).emplacements[curr], 0);
 
-  const prixSerigraphie = hasSerigraphie ? palierIdx(FORFAITS_SERIGRAPHIE).couleurs[nbCouleursSeri] : 0;
-  const prixNumerique = hasNumerique ? palierIdx(FORFAITS_TRANSFERT).prix : 0;
-  const prixBroderie = hasBroderie ? palierIdx(FORFAITS_BRODERIE).emplacements[placeBroderieIdx] : 0;
-
-  const totalHT = (produit.prixBase * quantite) + prixSerigraphie + prixNumerique + prixBroderie;
+  const totalHT = (produit.prixBase * quantite) + totalSerigraphie + totalNumerique + totalBroderie;
   const tva = totalHT * 0.20;
   const totalTTC = totalHT + tva;
   const prixUnitaireTTC = totalTTC / quantite;
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white p-6 md:p-12 font-sans pb-32 text-slate-100">
+    <div className="min-h-screen bg-[#0f172a] text-white p-6 md:p-12 font-sans pb-32">
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-start mb-20">
         
-        {/* COLONNE GAUCHE */}
-        <div className="space-y-10">
-          <h1 className="text-3xl font-black tracking-tighter uppercase border-l-4 border-white pl-4 non-italic">FACULTEE DEVIS</h1>
+        {/* GAUCHE : CONFIGURATION */}
+        <div className="space-y-12">
+          <h1 className="text-4xl font-black tracking-tighter uppercase border-l-8 border-white pl-6">FACULTEE DEVIS</h1>
           
+          {/* SUPPORTS */}
           <div className="space-y-4">
-            <label className="text-[10px] uppercase tracking-[0.3em] text-slate-500 font-bold">1. Support</label>
-            <div className="grid grid-cols-2 gap-3 font-bold uppercase tracking-widest text-[10px]">
+            <label className="text-[10px] uppercase tracking-[0.4em] text-slate-500 font-black">01. SUPPORT TEXTILE</label>
+            <div className="grid grid-cols-2 gap-3">
               {PRODUITS.map(p => (
-                <button key={p.id} onClick={() => handleSelectProduit(p.id)} 
-                  className={`p-4 rounded-xl border-2 transition-all ${produitId === p.id && p.id !== 'autres' ? 'border-white bg-white text-slate-900' : 'border-slate-800 text-slate-400 hover:border-slate-600'}`}>
+                <button key={p.id} onClick={() => setProduitId(p.id)} 
+                  className={`p-5 rounded-xl border-2 transition-all font-black text-[10px] tracking-widest ${produitId === p.id ? 'border-white bg-white text-slate-900' : 'border-slate-800 text-slate-400 hover:border-slate-700'}`}>
                   {p.nom}
                 </button>
+              ))}
+              <button onClick={() => setShowPopup(true)} className="p-5 rounded-xl border-2 border-dashed border-slate-700 text-slate-500 font-black text-[10px] tracking-widest hover:border-white hover:text-white transition-all">AUTRES +</button>
+            </div>
+          </div>
+
+          {/* PERSONNALISATION MULTIPLE */}
+          <div className="space-y-6">
+            <label className="text-[10px] uppercase tracking-[0.4em] text-slate-500 font-black">02. MARQUAGES CUMULABLES</label>
+            
+            {/* SÉRIGRAPHIE MULTIPLE */}
+            <div className="p-6 rounded-2xl border-2 border-slate-800 bg-slate-900/30">
+              <div className="flex justify-between items-center mb-4">
+                <span className="font-black text-xs tracking-widest uppercase">SÉRIGRAPHIE</span>
+                <button onClick={() => setSeriChoices([...seriChoices, {place: 'COEUR', colors: 0}])} className="bg-white text-slate-900 text-[9px] px-3 py-1 rounded font-black">+ AJOUTER ZONE</button>
+              </div>
+              {seriChoices.map((s, i) => (
+                <div key={i} className="flex gap-2 mt-2">
+                  <select className="flex-1 bg-slate-950 p-2 rounded text-[10px] font-bold border border-slate-800 uppercase" value={s.place} onChange={(e) => {
+                    const newC = [...seriChoices]; newC[i].place = e.target.value; setSeriChoices(newC);
+                  }}>
+                    {EMPLACEMENTS.map(e => <option key={e} value={e}>{e}</option>)}
+                  </select>
+                  <select className="w-24 bg-slate-950 p-2 rounded text-[10px] font-bold border border-slate-800 uppercase" value={s.colors} onChange={(e) => {
+                    const newC = [...seriChoices]; newC[i].colors = Number(e.target.value); setSeriChoices(newC);
+                  }}>
+                    {[1,2,3,4,5,6,7,8].map((n, idx) => <option key={idx} value={idx}>{n} COUL.</option>)}
+                  </select>
+                  <button onClick={() => setSeriChoices(seriChoices.filter((_, idx) => idx !== i))} className="text-red-500 font-bold px-2">✕</button>
+                </div>
+              ))}
+            </div>
+
+            {/* NUMÉRIQUE MULTIPLE */}
+            <div className="p-6 rounded-2xl border-2 border-slate-800 bg-slate-900/30">
+              <div className="flex justify-between items-center mb-4">
+                <span className="font-black text-xs tracking-widest uppercase">NUMÉRIQUE</span>
+                <button onClick={() => setNumChoices([...numChoices, 'COEUR'])} className="bg-white text-slate-900 text-[9px] px-3 py-1 rounded font-black">+ AJOUTER ZONE</button>
+              </div>
+              {numChoices.map((n, i) => (
+                <div key={i} className="flex gap-2 mt-2">
+                  <select className="flex-1 bg-slate-950 p-2 rounded text-[10px] font-bold border border-slate-800 uppercase" value={n} onChange={(e) => {
+                    const newC = [...numChoices]; newC[i] = e.target.value; setNumChoices(newC);
+                  }}>
+                    {EMPLACEMENTS.map(e => <option key={e} value={e}>{e}</option>)}
+                  </select>
+                  <button onClick={() => setNumChoices(numChoices.filter((_, idx) => idx !== i))} className="text-red-500 font-bold px-2">✕</button>
+                </div>
+              ))}
+            </div>
+
+            {/* BRODERIE MULTIPLE */}
+            <div className="p-6 rounded-2xl border-2 border-slate-800 bg-slate-900/30">
+              <div className="flex justify-between items-center mb-4">
+                <span className="font-black text-xs tracking-widest uppercase">BRODERIE</span>
+                <button onClick={() => setBroderieChoices([...broderieChoices, 0])} className="bg-white text-slate-900 text-[9px] px-3 py-1 rounded font-black">+ AJOUTER ZONE</button>
+              </div>
+              {broderieChoices.map((b, i) => (
+                <div key={i} className="flex gap-2 mt-2">
+                  <select className="flex-1 bg-slate-950 p-2 rounded text-[10px] font-bold border border-slate-800 uppercase" value={b} onChange={(e) => {
+                    const newC = [...broderieChoices]; newC[i] = Number(e.target.value); setBroderieChoices(newC);
+                  }}>
+                    <option value={0}>COEUR</option><option value={1}>CENTRAL</option><option value={2}>DOS</option>
+                  </select>
+                  <button onClick={() => setBroderieChoices(broderieChoices.filter((_, idx) => idx !== i))} className="text-red-500 font-bold px-2">✕</button>
+                </div>
               ))}
             </div>
           </div>
 
-          <div className="space-y-4">
-            <label className="text-[10px] uppercase tracking-[0.3em] text-slate-500 font-bold">2. Personnalisation (Cumulable)</label>
-            
-            <div className={`p-5 rounded-xl border-2 transition-all mb-4 ${hasSerigraphie ? 'border-white bg-white/5' : 'border-slate-800 opacity-60'}`}>
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-sm font-black uppercase tracking-widest">Sérigraphie</span>
-                <input type="checkbox" checked={hasSerigraphie} onChange={() => setHasSerigraphie(!hasSerigraphie)} className="w-6 h-6 accent-white" />
-              </div>
-              {hasSerigraphie && (
-                <div className="grid grid-cols-2 gap-2">
-                  <select value={nbCouleursSeri} onChange={(e) => setNbCouleursSeri(Number(e.target.value))} className="bg-slate-900 p-3 rounded-lg text-[10px] border border-slate-700 font-bold uppercase outline-none">
-                    {[1,2,3,4,5,6,7,8].map((n, i) => <option key={n} value={i}>{n} Coul.</option>)}
-                  </select>
-                  <select value={placeSeri} onChange={(e) => setPlaceSeri(e.target.value)} className="bg-slate-900 p-3 rounded-lg text-[10px] border border-slate-700 font-bold uppercase outline-none">
-                    {EMPLACEMENTS.map(e => <option key={e} value={e}>{e}</option>)}
-                  </select>
-                </div>
-              )}
-            </div>
-
-            <div className={`p-5 rounded-xl border-2 transition-all mb-4 ${hasNumerique ? 'border-white bg-white/5' : 'border-slate-800 opacity-60'}`}>
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-sm font-black uppercase tracking-widest">Numérique</span>
-                <input type="checkbox" checked={hasNumerique} onChange={() => setHasNumerique(!hasNumerique)} className="w-6 h-6 accent-white" />
-              </div>
-              {hasNumerique && (
-                <select value={placeNum} onChange={(e) => setPlaceNum(e.target.value)} className="w-full bg-slate-900 p-3 rounded-lg text-[10px] border border-slate-700 font-bold uppercase outline-none">
-                  {EMPLACEMENTS.map(e => <option key={e} value={e}>{e}</option>)}
-                </select>
-              )}
-            </div>
-
-            <div className={`p-5 rounded-xl border-2 transition-all ${hasBroderie ? 'border-white bg-white/5' : 'border-slate-800 opacity-60'}`}>
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-sm font-black uppercase tracking-widest">Broderie</span>
-                <input type="checkbox" checked={hasBroderie} onChange={() => setHasBroderie(!hasBroderie)} className="w-6 h-6 accent-white" />
-              </div>
-              {hasBroderie && (
-                <select value={placeBroderieIdx} onChange={(e) => setPlaceBroderieIdx(Number(e.target.value))} className="w-full bg-slate-900 p-3 rounded-lg text-[10px] border border-slate-700 font-bold uppercase outline-none">
-                  {['Cœur', 'Central', 'Dos'].map((n, i) => <option key={n} value={i}>{n}</option>)}
-                </select>
-              )}
-            </div>
-          </div>
-
           <div className="space-y-6">
-            <label className="text-[10px] uppercase tracking-[0.3em] text-slate-500 font-bold block">3. Quantité : {quantite}</label>
-            <input type="range" min="10" max="200" step="10" value={quantite} onChange={(e) => setQuantite(Number(e.target.value))} className="w-full h-2 bg-slate-800 appearance-none accent-white cursor-pointer rounded-full" />
+            <label className="text-[10px] uppercase tracking-[0.4em] text-slate-500 font-black">03. QUANTITÉ : {quantite}</label>
+            <input type="range" min="10" max="200" step="10" value={quantite} onChange={(e) => setQuantite(Number(e.target.value))} className="w-full h-3 bg-slate-800 appearance-none accent-white cursor-pointer rounded-full" />
           </div>
         </div>
 
-        {/* COLONNE DROITE */}
+        {/* DROITE : PRIX & FLOTTANT */}
         <div className="relative pt-20 md:pt-40">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-12 z-20 pointer-events-none">
-            <div className="text-[120px] md:text-[180px] animate-float drop-shadow-[0_35px_35px_rgba(0,0,0,0.5)] uppercase font-black">
-              {produit.img}
-            </div>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-16 z-20 pointer-events-none">
+            <div className="text-[130px] md:text-[200px] animate-float drop-shadow-2xl">{produit.img}</div>
           </div>
 
-          <div className="bg-white text-slate-900 p-8 md:p-12 rounded-[2rem] shadow-2xl relative z-10 font-bold">
-            <h2 className="font-black uppercase text-[10px] tracking-[0.4em] text-slate-300 mb-8">Détails de l'estimation</h2>
-            <div className="space-y-4 text-sm mb-10">
-              <div className="flex justify-between border-b border-slate-50 pb-2 uppercase tracking-tighter">
-                <span className="text-slate-400 text-[9px]">{produit.nom} (x{quantite})</span>
-                <span className="font-black text-slate-900">{(produit.prixBase * quantite).toFixed(2)} €</span>
-              </div>
-              {hasSerigraphie && <div className="flex justify-between border-b border-slate-50 pb-2 uppercase tracking-tighter"><span className="text-slate-400 text-[9px]">Sérigraphie - {placeSeri}</span><span className="font-black text-slate-900">+{prixSerigraphie.toFixed(2)} €</span></div>}
-              {hasNumerique && <div className="flex justify-between border-b border-slate-50 pb-2 uppercase tracking-tighter"><span className="text-slate-400 text-[9px]">Numérique - {placeNum}</span><span className="font-black text-slate-900">+{prixNumerique.toFixed(2)} €</span></div>}
-              {hasBroderie && <div className="flex justify-between border-b border-slate-50 pb-2 uppercase tracking-tighter"><span className="text-slate-400 text-[9px]">Broderie - {['Cœur', 'Central', 'Dos'][placeBroderieIdx]}</span><span className="font-black text-slate-900">+{prixBroderie.toFixed(2)} €</span></div>}
+          <div className="bg-white text-slate-900 p-10 rounded-[2.5rem] shadow-3xl relative z-10 border-t-[12px] border-slate-100">
+            <h2 className="font-black uppercase text-[10px] tracking-[0.5em] text-slate-300 mb-10 text-center">RÉCAPITULATIF PROVISOIRE</h2>
+            
+            <div className="space-y-4 mb-12">
+               <div className="flex justify-between text-[11px] font-black uppercase"><span className="text-slate-400">{produit.nom} (x{quantite})</span><span>{(produit.prixBase * quantite).toFixed(2)} €</span></div>
+               {totalSerigraphie > 0 && <div className="flex justify-between text-[11px] font-black uppercase"><span className="text-slate-400">TOTAL SÉRIGRAPHIE</span><span>{totalSerigraphie.toFixed(2)} €</span></div>}
+               {totalNumerique > 0 && <div className="flex justify-between text-[11px] font-black uppercase"><span className="text-slate-400">TOTAL NUMÉRIQUE</span><span>{totalNumerique.toFixed(2)} €</span></div>}
+               {totalBroderie > 0 && <div className="flex justify-between text-[11px] font-black uppercase"><span className="text-slate-400">TOTAL BRODERIE</span><span>{totalBroderie.toFixed(2)} €</span></div>}
             </div>
 
-            <div className="space-y-1 text-right border-t-4 border-slate-900 pt-6">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Prix Total TTC</p>
-              <div className="text-6xl font-black tracking-tighter text-slate-900 leading-none">
-                {totalTTC.toFixed(2)}<span className="text-2xl ml-1 font-normal text-slate-400">€</span>
-              </div>
-              <div className="pt-6">
-                <span className="bg-slate-900 text-white px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] rounded-md inline-block">
-                  Soit {prixUnitaireTTC.toFixed(2)} € / Unité TTC
-                </span>
-              </div>
+            <div className="text-center space-y-2 border-t-2 border-slate-50 pt-8">
+              <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest">ESTIMATION TTC</p>
+              <div className="text-7xl font-black tracking-tighter text-slate-900">{totalTTC.toFixed(2)}€</div>
+              <div className="pt-4"><span className="bg-slate-900 text-white px-5 py-2 text-[10px] font-black uppercase rounded-full">SOIT {prixUnitaireTTC.toFixed(2)} € / UNITÉ</span></div>
             </div>
-          </div>
-        </div>
-      </div>
 
-      {/* CONTACT (RÉFÉRENCE POUR REDIRECTION) */}
-      <div ref={contactRef} className="max-w-4xl mx-auto bg-gradient-to-br from-slate-800 to-slate-950 p-8 md:p-14 rounded-[3.5rem] border border-slate-800 shadow-3xl text-center md:text-left scroll-mt-20">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h3 className="text-3xl font-black uppercase tracking-tighter mb-4">Un projet sur-mesure ?</h3>
-            <p className="text-slate-500 text-[10px] leading-relaxed uppercase tracking-[0.2em] font-black">
-              Besoin de quantités plus importantes ou de supports spécifiques ? Laissez vos coordonnées, on s'appelle.
-            </p>
-          </div>
-          <div className="space-y-4">
-            <input type="text" placeholder="MAIL OU TÉLÉPHONE" className="w-full bg-slate-900 border border-slate-800 p-6 rounded-2xl text-[10px] font-black tracking-widest uppercase focus:border-white outline-none transition-all placeholder:text-slate-700" />
-            <button className="w-full bg-white text-slate-900 py-6 rounded-2xl font-black uppercase text-[10px] tracking-[0.3em] hover:bg-slate-200 transition-all active:scale-95 shadow-lg">
-              Envoyer la demande
+            <button onClick={() => setShowPopup(true)} className="w-full mt-12 bg-slate-900 text-white py-6 rounded-2xl font-black uppercase text-xs tracking-[0.4em] hover:bg-slate-800 transition-all hover:scale-[1.03] shadow-2xl">
+              CONFIRMER & RECEVOIR
             </button>
           </div>
         </div>
       </div>
 
+      {/* POPUP MODAL SMOOTH */}
+      {showPopup && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md" onClick={() => setShowPopup(false)}></div>
+          <div className="bg-white text-slate-900 w-full max-w-lg p-10 rounded-[3rem] relative z-10 shadow-2xl animate-in fade-in zoom-in duration-300">
+            <h3 className="text-4xl font-black uppercase tracking-tighter mb-2 leading-none">PARLONS DE VOTRE PROJET.</h3>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-8">Nous reviendrons vers vous sous 24h.</p>
+            
+            <div className="space-y-4">
+              <input type="text" placeholder="MAIL OU TÉLÉPHONE" className="w-full border-2 border-slate-100 p-5 rounded-2xl font-black uppercase text-xs outline-none focus:border-slate-900 transition-all" />
+              <textarea placeholder="VOTRE PROJET EN QUELQUES MOTS (FACULTATIF)" rows={3} className="w-full border-2 border-slate-100 p-5 rounded-2xl font-black uppercase text-xs outline-none focus:border-slate-900 transition-all" />
+              <button className="w-full bg-slate-900 text-white py-6 rounded-2xl font-black uppercase text-xs tracking-[0.3em] hover:invert transition-all">ENVOYER LA DEMANDE</button>
+            </div>
+            <button onClick={() => setShowPopup(false)} className="absolute top-6 right-8 font-black text-slate-300 hover:text-slate-900 transition-all uppercase text-[10px] tracking-widest">FERMER</button>
+          </div>
+        </div>
+      )}
+
       <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes float {
-          0% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-30px) rotate(5deg); }
-          100% { transform: translateY(0px) rotate(0deg); }
-        }
+        @keyframes float { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-30px) rotate(5deg); } 100% { transform: translateY(0px) rotate(0deg); } }
         .animate-float { animation: float 6s ease-in-out infinite !important; display: inline-block; }
+        .animate-in { animation: zoomIn 0.3s ease-out; }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
       `}} />
     </div>
   );
