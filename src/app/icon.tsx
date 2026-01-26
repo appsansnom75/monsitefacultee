@@ -13,14 +13,10 @@ export default function Icon() {
     (
       <div
         style={{
-          fontSize: 24,
-          background: '#0891b2', // C'est le bleu cyan-600 de ton bouton
+          background: '#0f172a', // Le bleu nuit exact de ton site
           width: '100%',
           height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderRadius: '4px', // Un carré légèrement arrondi pour le style
+          borderRadius: '4px', // Un carré légèrement arrondi pour être propre
         }}
       />
     ),
