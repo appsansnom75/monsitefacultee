@@ -1,12 +1,12 @@
 'use client';
 import React, { useState } from 'react';
 
-// --- TES DONNÉES DE PRIX (Regroupées ici) ---
+// --- DONNÉES DE PRIX ---
 const PRODUITS = [
-  { id: 'tshirt', nom: 'T-shirt Unisex', prixBase: 2.50 },
-  { id: 'hoodie', nom: 'Sweat à capuche', prixBase: 7.47 },
-  { id: 'sweat', nom: 'Sweat col rond', prixBase: 5.50 },
-  { id: 'totebag', nom: 'Tote bag coton', prixBase: 1.00 },
+  { id: 'tshirt', nom: 'T-shirt Bio', prixBase: 2.50, img: '👕' },
+  { id: 'hoodie', nom: 'Sweat à capuche', prixBase: 7.47, img: '🧥' },
+  { id: 'sweat', nom: 'Sweat col rond', prixBase: 5.50, img: '👕' },
+  { id: 'totebag', nom: 'Tote bag coton', prixBase: 1.00, img: '👜' },
 ];
 
 const FORFAITS_SERIGRAPHIE = [
@@ -21,12 +21,6 @@ const FORFAITS_SERIGRAPHIE = [
   { qte: 200, couleurs: [133.00, 168, 203, 238, 273, 308, 343, 378] },
 ];
 
-const FORFAITS_TRANSFERT = [
-  { qte: 10, prix: 47.10 }, { qte: 20, prix: 59.20 }, { qte: 30, prix: 71.30 },
-  { qte: 40, prix: 83.40 }, { qte: 50, prix: 92.50 }, { qte: 75, prix: 121.25 },
-  { qte: 100, prix: 144 }, { qte: 150, prix: 198.5 }, { qte: 200, prix: 253 }
-];
-
 const FORFAITS_BRODERIE = [
   { qte: 10, emplacements: [69.2, 154.3, 165.8] },
   { qte: 20, emplacements: [98.4, 268.6, 291.6] },
@@ -39,118 +33,150 @@ const FORFAITS_BRODERIE = [
   { qte: 200, emplacements: [442, 2180, 2394] },
 ];
 
-// --- COMPOSANT DE LA PAGE ---
 export default function ConfigurateurFacultee() {
   const [produitId, setProduitId] = useState(PRODUITS[0].id);
   const [quantite, setQuantite] = useState(10);
-  const [technique, setTechnique] = useState('serigraphie');
-  const [optionIndex, setOptionIndex] = useState(0); 
+  const [hasSerigraphie, setHasSerigraphie] = useState(false);
+  const [nbCouleursSeri, setNbCouleursSeri] = useState(0);
+  const [hasBroderie, setHasBroderie] = useState(false);
+  const [emplacementBroderie, setEmplacementBroderie] = useState(0);
 
   const produit = PRODUITS.find(p => p.id === produitId) || PRODUITS[0];
 
-  // Logique de calcul
-  let prixMarquageForfait = 0;
-  if (technique === 'serigraphie') {
+  let prixSerigraphie = 0;
+  if (hasSerigraphie) {
     const palier = [...FORFAITS_SERIGRAPHIE].reverse().find(f => quantite >= f.qte) || FORFAITS_SERIGRAPHIE[0];
-    prixMarquageForfait = palier.couleurs[optionIndex];
-  } else if (technique === 'transfert') {
-    const palier = [...FORFAITS_TRANSFERT].reverse().find(f => quantite >= f.qte) || FORFAITS_TRANSFERT[0];
-    prixMarquageForfait = palier.prix;
-  } else {
-    const palier = [...FORFAITS_BRODERIE].reverse().find(f => quantite >= f.qte) || FORFAITS_BRODERIE[0];
-    prixMarquageForfait = palier.emplacements[optionIndex];
+    prixSerigraphie = palier.couleurs[nbCouleursSeri];
   }
 
-  const totalTextile = produit.prixBase * quantite;
-  const totalGlobal = totalTextile + prixMarquageForfait;
+  let prixBroderie = 0;
+  if (hasBroderie) {
+    const palier = [...FORFAITS_BRODERIE].reverse().find(f => quantite >= f.qte) || FORFAITS_BRODERIE[0];
+    prixBroderie = palier.emplacements[emplacementBroderie];
+  }
+
+  const totalHT = (produit.prixBase * quantite) + prixSerigraphie + prixBroderie;
+  const tva = totalHT * 0.20;
+  const totalTTC = totalHT + tva;
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-white p-6 md:p-12 font-sans">
-      <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10">
+      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-start">
         
-        {/* OPTIONS */}
-        <div className="space-y-8">
-          <h1 className="text-2xl font-bold tracking-[0.2em] uppercase opacity-90">Simulateur FACULTEE</h1>
+        {/* COLONNE GAUCHE : OPTIONS */}
+        <div className="space-y-10">
+          <h1 className="text-3xl font-black tracking-tighter uppercase text-white border-l-4 border-white pl-4">
+            FACULTEE <span className="text-slate-500 font-light">Devis</span>
+          </h1>
           
-          <div>
-            <label className="text-[10px] uppercase tracking-[0.2em] text-slate-500 mb-3 block font-bold">1. Support Textile</label>
-            <div className="grid grid-cols-1 gap-2">
+          <div className="space-y-4">
+            <label className="text-[10px] uppercase tracking-[0.3em] text-slate-500 font-bold">1. Support</label>
+            <div className="grid grid-cols-2 gap-3">
               {PRODUITS.map(p => (
                 <button key={p.id} onClick={() => setProduitId(p.id)}
-                  className={`text-left p-4 rounded border transition-all ${produitId === p.id ? 'border-white bg-white/5' : 'border-slate-800 bg-slate-800/30 hover:border-slate-600'}`}>
-                  <div className="text-sm font-bold">{p.nom}</div>
-                  <div className="text-xs text-slate-500">{p.prixBase.toFixed(2)} € / unité</div>
+                  className={`p-4 rounded-xl border-2 transition-all text-center ${produitId === p.id ? 'border-white bg-white text-slate-900 scale-[1.02]' : 'border-slate-800 text-slate-400 hover:border-slate-600'}`}>
+                  <span className="text-xs font-black uppercase tracking-widest">{p.nom}</span>
                 </button>
               ))}
             </div>
           </div>
 
-          <div>
-            <label className="text-[10px] uppercase tracking-[0.2em] text-slate-500 mb-3 block font-bold">2. Technique de Marquage</label>
-            <div className="flex gap-2">
-              {['serigraphie', 'transfert', 'broderie'].map(t => (
-                <button key={t} onClick={() => { setTechnique(t); setOptionIndex(0); }} 
-                  className={`flex-1 py-3 rounded text-[10px] uppercase font-black border transition-all ${technique === t ? 'bg-white text-slate-900 border-white' : 'border-slate-800 text-slate-500 border-slate-800'}`}>
-                  {t}
-                </button>
-              ))}
+          <div className="space-y-4">
+            <label className="text-[10px] uppercase tracking-[0.3em] text-slate-500 font-bold">2. Personnalisation</label>
+            <div className="grid gap-4">
+              <div className={`p-5 rounded-xl border-2 transition-all ${hasSerigraphie ? 'border-white bg-white/5' : 'border-slate-800'}`}>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-sm font-black uppercase tracking-widest">Sérigraphie</span>
+                  <input type="checkbox" checked={hasSerigraphie} onChange={() => setHasSerigraphie(!hasSerigraphie)} className="w-6 h-6 accent-white" />
+                </div>
+                {hasSerigraphie && (
+                  <select value={nbCouleursSeri} onChange={(e) => setNbCouleursSeri(Number(e.target.value))} className="w-full bg-slate-900 p-3 rounded-lg text-xs border border-slate-700 font-bold outline-none uppercase tracking-widest">
+                    {[1,2,3,4,5,6,7,8].map((n, i) => <option key={n} value={i}>{n} Couleur(s)</option>)}
+                  </select>
+                )}
+              </div>
+
+              <div className={`p-5 rounded-xl border-2 transition-all ${hasBroderie ? 'border-white bg-white/5' : 'border-slate-800'}`}>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-sm font-black uppercase tracking-widest">Broderie</span>
+                  <input type="checkbox" checked={hasBroderie} onChange={() => setHasBroderie(!hasBroderie)} className="w-6 h-6 accent-white" />
+                </div>
+                {hasBroderie && (
+                  <select value={emplacementBroderie} onChange={(e) => setEmplacementBroderie(Number(e.target.value))} className="w-full bg-slate-900 p-3 rounded-lg text-xs border border-slate-700 font-bold outline-none uppercase tracking-widest">
+                    {['Cœur', 'Central', 'Dos'].map((n, i) => <option key={n} value={i}>Emplacement : {n}</option>)}
+                  </select>
+                )}
+              </div>
             </div>
           </div>
 
-          <div>
-            <label className="text-[10px] uppercase tracking-[0.2em] text-slate-500 mb-3 block font-bold">3. Configuration</label>
-            {technique === 'serigraphie' && (
-              <select onChange={(e) => setOptionIndex(Number(e.target.value))} className="w-full bg-slate-900 p-4 rounded border border-slate-800 text-sm outline-none">
-                {[1,2,3,4,5,6,7,8].map((n, i) => <option key={n} value={i}>{n} Couleur(s)</option>)}
-              </select>
-            )}
-            {technique === 'broderie' && (
-              <select onChange={(e) => setOptionIndex(Number(e.target.value))} className="w-full bg-slate-900 p-4 rounded border border-slate-800 text-sm outline-none">
-                {['Cœur', 'Central', 'Dos'].map((n, i) => <option key={n} value={i}>Emplacement : {n}</option>)}
-              </select>
-            )}
-            {technique === 'transfert' && <div className="p-4 bg-slate-800/30 border border-slate-800 rounded text-xs text-slate-500 italic">Transfert numérique couleur inclus</div>}
-          </div>
-
-          <div>
-            <label className="text-[10px] uppercase tracking-[0.2em] text-slate-500 mb-6 block font-bold">4. Quantité : <span className="text-white ml-2 text-base">{quantite}</span></label>
-            <input type="range" min="10" max="200" step="10" value={quantite} onChange={(e) => setQuantite(Number(e.target.value))} className="w-full h-1.5 bg-slate-800 appearance-none accent-white cursor-pointer rounded-lg" />
-            <div className="flex justify-between text-[10px] text-slate-600 mt-2 font-bold uppercase tracking-widest"><span>Min: 10</span><span>Max: 200</span></div>
+          <div className="space-y-6">
+            <label className="text-[10px] uppercase tracking-[0.3em] text-slate-500 font-bold block">3. Quantité : {quantite}</label>
+            <input type="range" min="10" max="200" step="10" value={quantite} onChange={(e) => setQuantite(Number(e.target.value))} className="w-full h-2 bg-slate-800 appearance-none accent-white cursor-pointer rounded-full" />
           </div>
         </div>
 
-        {/* PANIER RÉCAPITULATIF */}
-        <div className="bg-white text-slate-900 p-8 rounded shadow-2xl self-start sticky top-10">
-          <div className="flex justify-between items-center mb-10">
-            <h2 className="font-black uppercase text-xs tracking-widest text-slate-400">Récapitulatif HT</h2>
-            <span className="bg-slate-100 px-2 py-1 rounded text-[10px] font-bold">FACULTEE.FR</span>
-          </div>
+        {/* COLONNE DROITE : 3D + RÉCAP */}
+        <div className="relative pt-20 md:pt-40">
           
-          <div className="space-y-5 text-sm mb-10">
-            <div className="flex justify-between items-center">
-              <span className="text-slate-500 font-medium">{produit.nom} <span className="text-[10px] ml-1">x{quantite}</span></span>
-              <span className="font-bold tracking-tight">{totalTextile.toFixed(2)} €</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-slate-500 font-medium uppercase text-[12px]">Forfait {technique}</span>
-              <span className="font-bold tracking-tight">{prixMarquageForfait.toFixed(2)} €</span>
+          {/* PRODUIT 3D FLOTTANT */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-12 z-20 pointer-events-none">
+            <div className="text-[120px] md:text-[180px] animate-float drop-shadow-[0_35px_35px_rgba(0,0,0,0.5)] flex items-center justify-center">
+              {produit.img}
             </div>
           </div>
 
-          <div className="border-t-[3px] border-slate-50 pt-8 flex justify-between items-end">
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Estimation Totale</span>
-            <div className="text-right">
-                <div className="text-4xl font-black tracking-tighter">{totalGlobal.toFixed(2)} €</div>
-                <div className="text-[10px] text-slate-400 font-bold">Soit {(totalGlobal / quantite).toFixed(2)} € / unité</div>
+          {/* BLOC RÉCAPITULATIF BLANC */}
+          <div className="bg-white text-slate-900 p-8 md:p-12 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] relative z-10 overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-slate-200 to-transparent opacity-50"></div>
+            
+            <h2 className="font-black uppercase text-[10px] tracking-[0.4em] text-slate-300 mb-10">Votre Configuration</h2>
+            
+            <div className="space-y-6 text-sm mb-12">
+              <div className="flex justify-between border-b border-slate-50 pb-4">
+                <span className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">{produit.nom} (x{quantite})</span>
+                <span className="font-black italic">{(produit.prixBase * quantite).toFixed(2)} €</span>
+              </div>
+              {hasSerigraphie && (
+                <div className="flex justify-between border-b border-slate-50 pb-4">
+                  <span className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Sérigraphie</span>
+                  <span className="font-black italic text-slate-900">+{prixSerigraphie.toFixed(2)} €</span>
+                </div>
+              )}
+              {hasBroderie && (
+                <div className="flex justify-between border-b border-slate-50 pb-4">
+                  <span className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Broderie</span>
+                  <span className="font-black italic text-slate-900">+{prixBroderie.toFixed(2)} €</span>
+                </div>
+              )}
             </div>
-          </div>
 
-          <button className="w-full mt-10 bg-slate-900 text-white py-5 rounded font-black uppercase text-[11px] tracking-[0.2em] hover:bg-slate-800 transition-all active:scale-[0.98]">
-            Valider ma commande
-          </button>
+            <div className="space-y-1 text-right mb-10">
+              <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Total TTC (TVA 20% incluse)</p>
+              <div className="text-6xl font-black tracking-tighter text-slate-900">
+                {totalTTC.toFixed(2)}<span className="text-2xl ml-1 font-light italic">€</span>
+              </div>
+            </div>
+
+            <button className="w-full bg-slate-900 text-white py-6 rounded-2xl font-black uppercase text-xs tracking-[0.3em] hover:bg-slate-800 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl">
+              Confirmer la demande
+            </button>
+          </div>
         </div>
 
       </div>
+
+      {/* STYLES POUR L'ANIMATION 3D */}
+      <style jsx global>{`
+        @keyframes float {
+          0% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(5deg); }
+          100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 }
