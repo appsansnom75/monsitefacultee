@@ -262,4 +262,24 @@ export default function HomePage() {
       )}
     </div>
   );
+
+{/* SECTION SEO INVISIBLE - NE CHANGE RIEN AU VISUEL */}
+<section className="sr-only">
+  <h2>Studio de marquage textile : Sérigraphie, Broderie, Numérique</h2>
+  <p>
+    FACULTEE est votre partenaire expert pour la personnalisation de t-shirts en coton bio, 
+    sweats à capuche (hoodies) et tote-bags. Notre atelier propose des solutions de 
+    marquage premium adaptées aux entreprises, associations et marques de créateurs. 
+    Basé en France, nous garantissons une qualité de broderie exceptionnelle et une 
+    impression numérique haute définition. Profitez de notre simulateur de prix HT et TTC 
+    pour obtenir un devis immédiat.
+  </p>
+  <ul>
+    <li>Impression t-shirt personnalisé petite et grande série</li>
+    <li>Broderie textile haut de gamme sur sweat-shirt</li>
+    <li>Sérigraphie artisanale sur tote-bag coton</li>
+    <li>Livraison offerte en France métropolitaine</li>
+  </ul>
+</section>
+
 }

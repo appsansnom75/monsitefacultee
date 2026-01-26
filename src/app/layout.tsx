@@ -1,34 +1,33 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "FACULTEE",
-  description: "broderie et sérigraphie sur mesure.",
+  title: "FACULTEE | Studio de Personnalisation Textile Premium",
+  description: "Devis en ligne immédiat pour T-shirts bio, Hoodies et Tote-bags. Experts en Sérigraphie, Broderie et Impression numérique à Paris. Qualité premium, livraison offerte.",
+  keywords: ["personnalisation textile", "sérigraphie", "broderie", "t-shirt personnalisé", "vêtement image", "facultee"],
+  authors: [{ name: "FACULTEE" }],
+  openGraph: {
+    title: "FACULTEE | Studio de Personnalisation Textile Premium",
+    description: "Calculez votre devis en temps réel pour vos textiles personnalisés.",
+    url: "https://www.facultee.fr",
+    siteName: "FACULTEE",
+    locale: "fr_FR",
+    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  }
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
+    <html lang="fr">
+      <body>{children}</body>
     </html>
   );
 }
