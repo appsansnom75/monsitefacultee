@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 
 // --- DONNÉES DE PRIX (+20%) ---
 const PRODUITS = [
-  { id: 'TSHIRT', nom: 'T-SHIRT UNISEX', prixBase: 3.00 },
+  { id: 'TSHIRT', nom: 'TSHIRT BIO', prixBase: 3.00 },
   { id: 'HOODIE', nom: 'SWEAT À CAPUCHE', prixBase: 8.96 },
   { id: 'SWEAT', nom: 'SWEAT COL ROND', prixBase: 6.60 },
-  { id: 'TOTEBAG', nom: 'TOTE BAG', prixBase: 1.20 },
+  { id: 'TOTEBAG', nom: 'TOTE BAG COTON', prixBase: 1.20 },
 ];
 
 const FORFAITS_SERIGRAPHIE = [
@@ -17,7 +17,7 @@ const FORFAITS_SERIGRAPHIE = [
   { qte: 200, couleurs: [159.60, 201.60, 243.60, 285.60, 327.60, 369.60, 411.60, 453.60] },
 ];
 
-const FORFAITS_TRANSFERT = [
+const FORFAITS_NUMERIQUE = [
   { qte: 10, prix: 56.52 }, { qte: 20, prix: 71.04 }, { qte: 50, prix: 111.00 },
   { qte: 100, prix: 172.80 }, { qte: 200, prix: 303.60 }
 ];
@@ -36,6 +36,7 @@ export default function HomePage() {
   const [produitId, setProduitId] = useState(PRODUITS[0].id);
   const [quantite, setQuantite] = useState(10);
   const [showPopup, setShowPopup] = useState(false);
+  const [infoTooltip, setInfoTooltip] = useState<string | null>(null);
 
   const [seriChoices, setSeriChoices] = useState<{place: string, colors: number}[]>([]);
   const [numChoices, setNumChoices] = useState<string[]>([]);
@@ -46,13 +47,19 @@ export default function HomePage() {
   const getPalier = (arr: any[]) => [...arr].reverse().find(f => quantite >= f.qte) || arr[0];
 
   const totalSerigraphie = seriChoices.reduce((acc, curr) => acc + getPalier(FORFAITS_SERIGRAPHIE).couleurs[curr.colors], 0);
-  const totalNumerique = numChoices.length * getPalier(FORFAITS_TRANSFERT).prix;
+  const totalNumerique = numChoices.length * getPalier(FORFAITS_NUMERIQUE).prix;
   const totalBroderie = broderieChoices.reduce((acc, curr) => acc + getPalier(FORFAITS_BRODERIE).emplacements[curr], 0);
 
   const totalHT = (produit.prixBase * quantite) + totalSerigraphie + totalNumerique + totalBroderie;
   const tva = totalHT * 0.20;
   const totalTTC = totalHT + tva;
   const prixUnitaireTTC = totalTTC / quantite;
+
+  const definitions = {
+    SERI: "Idéal pour les grandes quantités : rendu éclatant, résistant et économique par couleur.",
+    NUM: "Parfait pour les logos multicolores ou photos : impression directe dans la fibre sans limite de couleurs.",
+    BROD: "Le marquage haut de gamme : relief élégant et durabilité exceptionnelle pour un rendu pro."
+  };
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-white p-6 md:p-12 font-sans selection:bg-white selection:text-slate-900">
@@ -63,8 +70,9 @@ export default function HomePage() {
         </header>
 
         <div className="grid md:grid-cols-2 gap-16 items-start">
-          {/* CONFIGURATION */}
+          
           <div className="space-y-12">
+            {/* 01 SUPPORT */}
             <div className="space-y-4">
               <label className="text-[10px] uppercase tracking-[0.4em] text-slate-500 font-black">01. SUPPORT TEXTILE</label>
               <div className="grid grid-cols-2 gap-3">
@@ -78,35 +86,70 @@ export default function HomePage() {
               </div>
             </div>
 
+            {/* 02 MARQUAGES */}
             <div className="space-y-6">
               <label className="text-[10px] uppercase tracking-[0.4em] text-slate-500 font-black">02. MARQUAGES CUMULABLES</label>
               
+              {/* TOOLTIP DISPLAY */}
+              {infoTooltip && (
+                <div className="bg-white text-slate-900 p-4 rounded-xl text-[10px] font-black uppercase tracking-widest animate-in slide-in-from-top-2">
+                   💡 {infoTooltip}
+                </div>
+              )}
+
+              {/* SÉRIGRAPHIE */}
               <div className="p-6 rounded-2xl border-2 border-slate-800 bg-slate-900/30">
-                <div className="flex justify-between items-center mb-4 text-white">
-                  <span className="font-black text-xs tracking-widest uppercase">SÉRIGRAPHIE</span>
-                  <button onClick={() => setSeriChoices([...seriChoices, {place: 'COEUR', colors: 0}])} className="bg-white text-slate-900 text-[9px] px-3 py-1 rounded font-black uppercase tracking-tighter">AJOUTER ZONE</button>
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="font-black text-xs tracking-widest uppercase">SÉRIGRAPHIE</span>
+                    <button onClick={() => setInfoTooltip(infoTooltip === definitions.SERI ? null : definitions.SERI)} className="w-4 h-4 rounded-full border border-slate-500 text-[10px] flex items-center justify-center text-slate-500 hover:text-white hover:border-white">?</button>
+                  </div>
+                  <button onClick={() => setSeriChoices([...seriChoices, {place: 'COEUR', colors: 0}])} className="bg-white text-slate-900 text-[9px] px-3 py-1 rounded font-black uppercase">AJOUTER</button>
                 </div>
                 {seriChoices.map((s, i) => (
                   <div key={i} className="flex gap-2 mt-2">
-                    <select className="flex-1 bg-slate-950 p-2 rounded text-[10px] font-black border border-slate-800 uppercase text-white" value={s.place} onChange={(e) => {
+                    <select className="flex-1 bg-slate-950 p-2 rounded text-[10px] font-black border border-slate-800 uppercase" value={s.place} onChange={(e) => {
                       const newC = [...seriChoices]; newC[i].place = e.target.value; setSeriChoices(newC);
-                    }}>
-                      {EMPLACEMENTS.map(e => <option key={e} value={e}>{e}</option>)}
-                    </select>
+                    }}>{EMPLACEMENTS.map(e => <option key={e} value={e}>{e}</option>)}</select>
+                    <select className="w-24 bg-slate-950 p-2 rounded text-[10px] font-black border border-slate-800 uppercase" value={s.colors} onChange={(e) => {
+                      const newC = [...seriChoices]; newC[i].colors = Number(e.target.value); setSeriChoices(newC);
+                    }}>{[1,2,3,4,5,6,7,8].map((n, idx) => <option key={idx} value={idx}>{n} COUL.</option>)}</select>
                     <button onClick={() => setSeriChoices(seriChoices.filter((_, idx) => idx !== i))} className="text-red-500 font-black px-2">✕</button>
+                  </div>
+                ))}
+              </div>
+
+              {/* NUMÉRIQUE */}
+              <div className="p-6 rounded-2xl border-2 border-slate-800 bg-slate-900/30">
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="font-black text-xs tracking-widest uppercase">NUMÉRIQUE</span>
+                    <button onClick={() => setInfoTooltip(infoTooltip === definitions.NUM ? null : definitions.NUM)} className="w-4 h-4 rounded-full border border-slate-500 text-[10px] flex items-center justify-center text-slate-500 hover:text-white hover:border-white">?</button>
+                  </div>
+                  <button onClick={() => setNumChoices([...numChoices, 'COEUR'])} className="bg-white text-slate-900 text-[9px] px-3 py-1 rounded font-black uppercase">AJOUTER</button>
+                </div>
+                {numChoices.map((n, i) => (
+                  <div key={i} className="flex gap-2 mt-2">
+                    <select className="flex-1 bg-slate-950 p-2 rounded text-[10px] font-black border border-slate-800 uppercase" value={n} onChange={(e) => {
+                      const newC = [...numChoices]; newC[i] = e.target.value; setNumChoices(newC);
+                    }}>{EMPLACEMENTS.map(e => <option key={e} value={e}>{e}</option>)}</select>
+                    <button onClick={() => setNumChoices(numChoices.filter((_, idx) => idx !== i))} className="text-red-500 font-black px-2">✕</button>
                   </div>
                 ))}
               </div>
 
               {/* BRODERIE */}
               <div className="p-6 rounded-2xl border-2 border-slate-800 bg-slate-900/30">
-                <div className="flex justify-between items-center mb-4 text-white">
-                  <span className="font-black text-xs tracking-widest uppercase">BRODERIE</span>
-                  <button onClick={() => setBroderieChoices([...broderieChoices, 0])} className="bg-white text-slate-900 text-[9px] px-3 py-1 rounded font-black uppercase tracking-tighter">AJOUTER ZONE</button>
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="font-black text-xs tracking-widest uppercase">BRODERIE</span>
+                    <button onClick={() => setInfoTooltip(infoTooltip === definitions.BROD ? null : definitions.BROD)} className="w-4 h-4 rounded-full border border-slate-500 text-[10px] flex items-center justify-center text-slate-500 hover:text-white hover:border-white">?</button>
+                  </div>
+                  <button onClick={() => setBroderieChoices([...broderieChoices, 0])} className="bg-white text-slate-900 text-[9px] px-3 py-1 rounded font-black uppercase">AJOUTER</button>
                 </div>
                 {broderieChoices.map((b, i) => (
                   <div key={i} className="flex gap-2 mt-2">
-                    <select className="flex-1 bg-slate-950 p-2 rounded text-[10px] font-black border border-slate-800 uppercase text-white" value={b} onChange={(e) => {
+                    <select className="flex-1 bg-slate-950 p-2 rounded text-[10px] font-black border border-slate-800 uppercase" value={b} onChange={(e) => {
                       const newC = [...broderieChoices]; newC[i] = Number(e.target.value); setBroderieChoices(newC);
                     }}>
                       <option value={0}>COEUR</option><option value={1}>CENTRAL</option><option value={2}>DOS</option>
@@ -117,20 +160,22 @@ export default function HomePage() {
               </div>
             </div>
 
+            {/* 03 QUANTITÉ */}
             <div className="space-y-6">
               <label className="text-[10px] uppercase tracking-[0.4em] text-slate-500 font-black">03. QUANTITÉ : {quantite}</label>
               <input type="range" min="10" max="200" step="10" value={quantite} onChange={(e) => setQuantite(Number(e.target.value))} className="w-full h-3 bg-slate-800 appearance-none accent-white cursor-pointer rounded-full" />
             </div>
           </div>
 
-          {/* RÉCAPITULATIF */}
+          {/* RÉCAPITULATIF STICKY */}
           <div className="bg-white text-slate-900 p-10 rounded-[2.5rem] shadow-3xl sticky top-12 border-t-[12px] border-slate-50">
             <h2 className="font-black uppercase text-[10px] tracking-[0.5em] text-slate-300 mb-10 text-center">VOTRE ESTIMATION HT</h2>
             
             <div className="space-y-4 mb-12">
                <div className="flex justify-between text-[11px] font-black uppercase"><span className="text-slate-400">{produit.nom} (x{quantite})</span><span>{(produit.prixBase * quantite).toFixed(2)} €</span></div>
-               {totalSerigraphie > 0 && <div className="flex justify-between text-[11px] font-black uppercase"><span className="text-slate-400">SÉRIGRAPHIE</span><span>{totalSerigraphie.toFixed(2)} €</span></div>}
-               {totalBroderie > 0 && <div className="flex justify-between text-[11px] font-black uppercase"><span className="text-slate-400">BRODERIE</span><span>{totalBroderie.toFixed(2)} €</span></div>}
+               {totalSerigraphie > 0 && <div className="flex justify-between text-[11px] font-black uppercase"><span className="text-slate-400">TOTAL SÉRIGRAPHIE</span><span>{totalSerigraphie.toFixed(2)} €</span></div>}
+               {totalNumerique > 0 && <div className="flex justify-between text-[11px] font-black uppercase"><span className="text-slate-400">TOTAL NUMÉRIQUE</span><span>{totalNumerique.toFixed(2)} €</span></div>}
+               {totalBroderie > 0 && <div className="flex justify-between text-[11px] font-black uppercase"><span className="text-slate-400">TOTAL BRODERIE</span><span>{totalBroderie.toFixed(2)} €</span></div>}
             </div>
 
             <div className="text-center space-y-4 border-t-2 border-slate-50 pt-8">
@@ -153,38 +198,38 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* FOOTER LÉGAL */}
+      {/* FOOTER */}
       <footer className="max-w-6xl mx-auto border-t border-slate-800 pt-20 pb-10">
         <div className="grid md:grid-cols-3 gap-12 text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
           <div className="space-y-4 text-left">
             <p className="text-white text-[10px]">MENTIONS LÉGALES</p>
             <p>FACULTEE.FR - STUDIO DE PERSONNALISATION TEXTILE</p>
-            <p>SIRET : 92031761700016 </p>
+            <p>SIRET : [TON SIRET ICI]</p>
             <p>SIÈGE SOCIAL : FRANCE</p>
           </div>
-          <div className="space-y-4">
-            <p className="text-white text-[10px]">CONDITIONS</p>
-            <p>PRIX ESTIMATIFS. LIVRAISON OFFERTE FRANCE MÉTROPOLITAINE. DÉLAIS 7-10 JOURS.</p>
+          <div className="space-y-4 text-center">
+            <p className="text-white text-[10px]">LIVRAISON</p>
+            <p>OFFERTE SUR TOUTE LA FRANCE MÉTROPOLITAINE. 10-15 JOURS OUVRÉS.</p>
           </div>
           <div className="space-y-4 md:text-right">
             <p className="text-white text-[10px]">CONTACT</p>
-            <p>facultee@outlook.com</p>
-            <p>© 2026 FACULTEE.</p>
+            <p>HELLO@FACULTEE.FR</p>
+            <p>© 2024 FACULTEE.</p>
           </div>
         </div>
       </footer>
 
-      {/* POPUP */}
+      {/* MODAL CONTACT */}
       {showPopup && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-sm" onClick={() => setShowPopup(false)}></div>
-          <div className="bg-white text-slate-900 w-full max-w-lg p-12 rounded-[3rem] relative z-10 shadow-2xl border-t-[10px] border-slate-900">
+          <div className="bg-white text-slate-900 w-full max-w-lg p-12 rounded-[3rem] relative z-10 shadow-2xl border-t-[10px] border-slate-900 animate-in zoom-in duration-200">
             <h3 className="text-4xl font-black uppercase tracking-tighter mb-4 leading-none">VOTRE PROJET.</h3>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-10">Laissez vos coordonnées pour le devis officiel.</p>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-10">On vous rappelle pour valider les détails.</p>
             <div className="space-y-4">
               <input type="text" placeholder="MAIL OU TÉLÉPHONE" className="w-full border-2 border-slate-100 p-6 rounded-2xl font-black uppercase text-xs outline-none focus:border-slate-900 transition-all" />
-              <textarea placeholder="VOTRE PROJET (VÊTEMENTS, COULEURS...)" rows={3} className="w-full border-2 border-slate-100 p-6 rounded-2xl font-black uppercase text-xs outline-none focus:border-slate-900 transition-all" />
-              <button className="w-full bg-slate-900 text-white py-6 rounded-2xl font-black uppercase text-xs tracking-[0.3em] hover:invert transition-all">ENVOYER</button>
+              <textarea placeholder="VOTRE PROJET EN QUELQUES MOTS..." rows={3} className="w-full border-2 border-slate-100 p-6 rounded-2xl font-black uppercase text-xs outline-none focus:border-slate-900 transition-all" />
+              <button className="w-full bg-slate-900 text-white py-6 rounded-2xl font-black uppercase text-xs tracking-[0.3em] hover:invert transition-all">ENVOYER LA DEMANDE</button>
             </div>
             <button onClick={() => setShowPopup(false)} className="absolute top-8 right-10 font-black text-slate-200 hover:text-slate-900 transition-all uppercase text-[9px] tracking-widest">FERMER</button>
           </div>
