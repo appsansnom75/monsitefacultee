@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 
 // --- DONNÉES DE PRIX (+20% APPLIQUÉS SUR LES DERNIERS TARIFS) ---
 const PRODUITS = [
-  { id: 'TSHIRT', nom: 'TSHIRT BIO', prixBase: 3.60 }, // 3.00 * 1.2
+  { id: 'TSHIRT', nom: 'TSHIRT UNISEX', prixBase: 3.60 }, // 3.00 * 1.2
   { id: 'HOODIE', nom: 'SWEAT À CAPUCHE', prixBase: 10.75 }, // 8.96 * 1.2
   { id: 'SWEAT', nom: 'SWEAT COL ROND', prixBase: 7.92 }, // 6.60 * 1.2
-  { id: 'TOTEBAG', nom: 'TOTE BAG COTON', prixBase: 1.44 }, // 1.20 * 1.2
+  { id: 'TOTEBAG', nom: 'TOTE BAG', prixBase: 1.44 }, // 1.20 * 1.2
 ];
 
 const FORFAITS_SERIGRAPHIE = [
@@ -214,7 +214,7 @@ export default function HomePage() {
           <div className="space-y-4 text-left">
             <p className="text-white text-[10px]">CONTACT</p>
             <p>HELLO@FACULTEE.FR</p>
-            <p>© 2024 FACULTEE. TOUS DROITS RÉSERVÉS.</p>
+            <p>© 2026 FACULTEE. TOUS DROITS RÉSERVÉS.</p>
           </div>
         </div>
       </footer>
