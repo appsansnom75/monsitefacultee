@@ -198,23 +198,29 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* FOOTER */}
+      {/* FOOTER - ALIGNÉ À GAUCHE */}
       <footer className="max-w-6xl mx-auto border-t border-slate-800 pt-20 pb-10">
         <div className="grid md:grid-cols-3 gap-12 text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
+          {/* Bloc 1 */}
           <div className="space-y-4 text-left">
             <p className="text-white text-[10px]">MENTIONS LÉGALES</p>
             <p>FACULTEE.FR - STUDIO DE PERSONNALISATION TEXTILE</p>
-            <p>SIRET : [TON SIRET ICI]</p>
+            <p>SIRET : 92031761700016</p>
             <p>SIÈGE SOCIAL : FRANCE</p>
           </div>
-          <div className="space-y-4 text-center">
+          
+          {/* Bloc 2 */}
+          <div className="space-y-4 text-left">
             <p className="text-white text-[10px]">LIVRAISON</p>
-            <p>OFFERTE SUR TOUTE LA FRANCE MÉTROPOLITAINE. 10-15 JOURS OUVRÉS.</p>
+            <p>OFFERTE SUR TOUTE LA FRANCE MÉTROPOLITAINE.</p>
+            <p>DÉLAIS : 10 À 15 JOURS OUVRÉS APRÈS VALIDATION.</p>
           </div>
-          <div className="space-y-4 md:text-right">
+          
+          {/* Bloc 3 */}
+          <div className="space-y-4 text-left">
             <p className="text-white text-[10px]">CONTACT</p>
             <p>HELLO@FACULTEE.FR</p>
-            <p>© 2024 FACULTEE.</p>
+            <p>© 2024 FACULTEE. TOUS DROITS RÉSERVÉS.</p>
           </div>
         </div>
       </footer>
