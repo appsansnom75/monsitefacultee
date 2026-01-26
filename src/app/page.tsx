@@ -223,8 +223,8 @@ export default function HomePage() {
           </div>
           <div className="space-y-4 text-left">
             <p className="text-white text-[10px]">CONTACT</p>
-            <p>HELLO@FACULTEE.FR</p>
-            <p>© 2024 FACULTEE. TOUS DROITS RESERVES.</p>
+            <p>FACULTEE@OUTLOOK.COM</p>
+            <p>© 2026 FACULTEE. TOUS DROITS RESERVES.</p>
           </div>
         </div>
       </footer>
