@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 
 // --- DONNÉES DE PRIX (+20%) ---
 const PRODUITS = [
-  { id: 'TSHIRT', nom: 'TSHIRT BIO', prixBase: 3.00 },
+  { id: 'TSHIRT', nom: 'T-SHIRT UNISEX', prixBase: 3.00 },
   { id: 'HOODIE', nom: 'SWEAT À CAPUCHE', prixBase: 8.96 },
   { id: 'SWEAT', nom: 'SWEAT COL ROND', prixBase: 6.60 },
-  { id: 'TOTEBAG', nom: 'TOTE BAG COTON', prixBase: 1.20 },
+  { id: 'TOTEBAG', nom: 'TOTE BAG', prixBase: 1.20 },
 ];
 
 const FORFAITS_SERIGRAPHIE = [
