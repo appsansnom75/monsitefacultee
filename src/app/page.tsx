@@ -220,7 +220,7 @@ export default function HomePage() {
           <div>
             <p className="text-white text-[10px] mb-4">CONTACT</p>
             <p>FACULTEE@OUTLOOK.COM</p>
-            <p className="mt-2">INSTAGRAM : @FACULTEE_</p>
+            <p className="mt-2">INSTAGRAM : @FACULTEE.FR</p>
           </div>
         </div>
       </footer>
