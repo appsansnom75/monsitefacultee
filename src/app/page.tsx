@@ -36,7 +36,6 @@ export default function HomePage() {
   const [produitId, setProduitId] = useState(PRODUITS[0].id);
   const [quantite, setQuantite] = useState(10);
   const [showPopup, setShowPopup] = useState(false);
-  const [infoTooltip, setInfoTooltip] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const [seriChoices, setSeriChoices] = useState<{place: string, colors: number}[]>([]);
@@ -69,23 +68,22 @@ export default function HomePage() {
     }
   };
 
-  const definitions = {
-    SERI: "IDÉAL POUR LES GRANDES QUANTITÉS : RENDU ÉCLATANT.",
-    NUM: "PARFAIT POUR LES LOGOS MULTICOLORES.",
-    BROD: "MARQUAGE HAUT DE GAMME : RELIEF ÉLÉGANT."
-  };
-
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white p-6 md:p-12 font-sans">
+    <div className="min-h-screen bg-[#0f172a] text-white p-6 md:p-12 font-sans selection:bg-white selection:text-slate-900">
       <div className="max-w-6xl mx-auto mb-20">
+        
+        {/* HEADER */}
         <header className="mb-16 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <h1 className="text-4xl font-black tracking-tighter uppercase border-l-8 border-white pl-6">FACULTEE</h1>
           <p className="text-[10px] font-black tracking-[0.4em] text-slate-500 uppercase">STUDIO DE PERSONNALISATION TEXTILE</p>
         </header>
 
         <div className="grid md:grid-cols-2 gap-16 items-start">
+          
+          {/* COLONNE GAUCHE : OPTIONS */}
           <div className="space-y-12">
-            {/* 01 SUPPORT */}
+            
+            {/* 01 SUPPORT TEXTILE */}
             <div className="space-y-4">
               <label className="text-[10px] uppercase tracking-[0.4em] text-slate-500 font-black">01. SUPPORT TEXTILE</label>
               <div className="grid grid-cols-2 gap-3">
@@ -95,6 +93,8 @@ export default function HomePage() {
                     {p.nom}
                   </button>
                 ))}
+                {/* RETOUR DU BOUTON AUTRES */}
+                <button onClick={() => setShowPopup(true)} className="p-5 rounded-xl border-2 border-dashed border-slate-700 text-slate-500 font-black text-[10px] tracking-widest hover:border-white hover:text-white transition-all uppercase">AUTRES +</button>
               </div>
             </div>
 
@@ -102,14 +102,13 @@ export default function HomePage() {
             <div className="space-y-6">
               <label className="text-[10px] uppercase tracking-[0.4em] text-slate-500 font-black">02. MARQUAGES</label>
               
-              {/* SÉRIGRAPHIE */}
               <div className="p-6 rounded-2xl border-2 border-slate-800 bg-slate-900/30">
                 <div className="flex justify-between items-center mb-4">
                   <span className="font-black text-xs tracking-widest uppercase">SERIGRAPHIE</span>
                   <button onClick={() => setSeriChoices([...seriChoices, {place: 'COEUR', colors: 0}])} className="bg-white text-slate-900 text-[9px] px-3 py-1 rounded font-black uppercase">AJOUTER</button>
                 </div>
                 {seriChoices.map((s, i) => (
-                  <div key={i} className="flex gap-2 mt-2">
+                  <div key={i} className="flex gap-2 mt-2 animate-in slide-in-from-left duration-300">
                     <select className="flex-1 bg-slate-950 p-2 rounded text-[10px] font-black border border-slate-800 uppercase" value={s.place} onChange={(e) => {
                       const newC = [...seriChoices]; newC[i].place = e.target.value; setSeriChoices(newC);
                     }}>{EMPLACEMENTS.map(e => <option key={e} value={e}>{e}</option>)}</select>
@@ -121,15 +120,14 @@ export default function HomePage() {
                 ))}
               </div>
 
-              {/* NUMÉRIQUE */}
               <div className="p-6 rounded-2xl border-2 border-slate-800 bg-slate-900/30">
                 <div className="flex justify-between items-center mb-4">
                   <span className="font-black text-xs tracking-widest uppercase">NUMERIQUE</span>
                   <button onClick={() => setNumChoices([...numChoices, 'COEUR'])} className="bg-white text-slate-900 text-[9px] px-3 py-1 rounded font-black uppercase">AJOUTER</button>
                 </div>
                 {numChoices.map((n, i) => (
-                  <div key={i} className="flex gap-2 mt-2">
-                    <select className="flex-1 bg-slate-950 p-2 rounded text-[10px] font-black border border-slate-800 uppercase text-white" value={n} onChange={(e) => {
+                  <div key={i} className="flex gap-2 mt-2 animate-in slide-in-from-left duration-300">
+                    <select className="flex-1 bg-slate-950 p-2 rounded text-[10px] font-black border border-slate-800 uppercase" value={n} onChange={(e) => {
                       const newC = [...numChoices]; newC[i] = e.target.value; setNumChoices(newC);
                     }}>{EMPLACEMENTS.map(e => <option key={e} value={e}>{e}</option>)}</select>
                     <button onClick={() => setNumChoices(numChoices.filter((_, idx) => idx !== i))} className="text-red-500 font-black px-2">X</button>
@@ -137,14 +135,13 @@ export default function HomePage() {
                 ))}
               </div>
 
-              {/* BRODERIE */}
               <div className="p-6 rounded-2xl border-2 border-slate-800 bg-slate-900/30">
                 <div className="flex justify-between items-center mb-4">
                   <span className="font-black text-xs tracking-widest uppercase">BRODERIE</span>
                   <button onClick={() => setBroderieChoices([...broderieChoices, 0])} className="bg-white text-slate-900 text-[9px] px-3 py-1 rounded font-black uppercase">AJOUTER</button>
                 </div>
                 {broderieChoices.map((b, i) => (
-                  <div key={i} className="flex gap-2 mt-2">
+                  <div key={i} className="flex gap-2 mt-2 animate-in slide-in-from-left duration-300">
                     <select className="flex-1 bg-slate-950 p-2 rounded text-[10px] font-black border border-slate-800 uppercase" value={b} onChange={(e) => {
                       const newC = [...broderieChoices]; newC[i] = Number(e.target.value); setBroderieChoices(newC);
                     }}>
@@ -160,20 +157,24 @@ export default function HomePage() {
             <div className="space-y-6">
               <label className="text-[10px] uppercase tracking-[0.4em] text-slate-500 font-black">03. QUANTITE : {quantite}</label>
               <input type="range" min="10" max="200" step="10" value={quantite} onChange={(e) => setQuantite(Number(e.target.value))} className="w-full h-3 bg-slate-800 appearance-none accent-white cursor-pointer rounded-full" />
+              <div className="flex justify-between text-[9px] font-black text-slate-600 uppercase tracking-widest">
+                <span>Min: 10</span>
+                <span>Max: 200+</span>
+              </div>
             </div>
           </div>
 
-          {/* RÉCAPITULATIF STICKY */}
+          {/* COLONNE DROITE : RÉCAPITULATIF + IMAGE */}
           <div className="sticky top-12">
             
-            {/* IMAGE DYNAMIQUE FIXE */}
+            {/* L'IMAGE QUI CHANGE SANS FLOTTEMENT */}
             <div className="flex justify-center mb-[-40px] relative z-10 pointer-events-none">
               <img 
                 key={produit.id}
                 src={produit.image} 
                 alt={produit.nom}
-                className="h-64 w-auto object-contain"
-                style={{ filter: "drop-shadow(0 20px 20px rgba(0,0,0,0.3))" }}
+                className="h-64 w-auto object-contain animate-in fade-in zoom-in duration-500"
+                style={{ filter: "drop-shadow(0 20px 25px rgba(0,0,0,0.4))" }}
               />
             </div>
 
@@ -195,7 +196,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <button onClick={() => setShowPopup(true)} className="w-full mt-12 bg-slate-900 text-white py-6 rounded-2xl font-black uppercase text-xs tracking-[0.4em] hover:bg-slate-800 transition-all shadow-2xl">
+              <button onClick={() => setShowPopup(true)} className="w-full mt-12 bg-slate-900 text-white py-6 rounded-2xl font-black uppercase text-xs tracking-[0.4em] hover:bg-slate-800 transition-all shadow-2xl active:scale-95">
                 RECEVOIR MON DEVIS
               </button>
             </div>
@@ -203,27 +204,32 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* FOOTER COMPLET FACULTEE.FR */}
       <footer className="max-w-6xl mx-auto border-t border-slate-800 pt-20 pb-10 px-6">
         <div className="grid md:grid-cols-3 gap-12 text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
           <div>
             <p className="text-white text-[10px] mb-4">MENTIONS LEGALES</p>
             <p>FACULTEE.FR - SIRET : 92031761700016</p>
+            <p className="mt-2">PROPRIÉTÉ DE FACULTEE STUDIO</p>
           </div>
           <div>
             <p className="text-white text-[10px] mb-4">LIVRAISON</p>
             <p>OFFERTE SUR TOUTE LA FRANCE.</p>
+            <p className="mt-2">DÉLAI MOYEN : 7 À 12 JOURS OUVRES.</p>
           </div>
           <div>
             <p className="text-white text-[10px] mb-4">CONTACT</p>
             <p>FACULTEE@OUTLOOK.COM</p>
+            <p className="mt-2">INSTAGRAM : @FACULTEE_</p>
           </div>
         </div>
       </footer>
 
+      {/* POPUP DE DEVIS */}
       {showPopup && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-sm" onClick={() => setShowPopup(false)}></div>
-          <div className="bg-white text-slate-900 w-full max-w-lg p-12 rounded-[3rem] relative z-10 shadow-2xl border-t-[10px] border-slate-900">
+          <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md" onClick={() => setShowPopup(false)}></div>
+          <div className="bg-white text-slate-900 w-full max-w-lg p-12 rounded-[3rem] relative z-10 shadow-2xl border-t-[10px] border-slate-900 animate-in zoom-in duration-300">
             {!isSubmitted ? (
               <>
                 <h3 className="text-4xl font-black uppercase tracking-tighter mb-10">VOTRE PROJET.</h3>
@@ -233,17 +239,18 @@ export default function HomePage() {
                   <input type="hidden" name="Estimation_TTC" value={`${totalTTC.toFixed(2)}€`} />
                   <input type="text" name="Nom" required placeholder="NOM ET PRENOM" className="w-full border-2 border-slate-100 p-6 rounded-2xl font-black uppercase text-xs outline-none focus:border-slate-900" />
                   <input type="text" name="Contact" required placeholder="MAIL OU TELEPHONE" className="w-full border-2 border-slate-100 p-6 rounded-2xl font-black uppercase text-xs outline-none focus:border-slate-900" />
-                  <textarea name="Message" placeholder="VOTRE PROJET (COULEURS, LOGOS...)" rows={3} className="w-full border-2 border-slate-100 p-6 rounded-2xl font-black uppercase text-xs outline-none focus:border-slate-900" />
-                  <button type="submit" className="w-full bg-slate-900 text-white py-6 rounded-2xl font-black uppercase text-xs tracking-[0.3em] hover:invert transition-all shadow-xl">ENVOYER LA DEMANDE</button>
+                  <textarea name="Message" placeholder="DÉTAILS (COULEURS, AUTRE PRODUIT, LOGOS...)" rows={3} className="w-full border-2 border-slate-100 p-6 rounded-2xl font-black uppercase text-xs outline-none focus:border-slate-900" />
+                  <button type="submit" className="w-full bg-slate-900 text-white py-6 rounded-2xl font-black uppercase text-xs tracking-[0.3em] hover:bg-slate-800 transition-all shadow-xl active:scale-95">ENVOYER LA DEMANDE</button>
                 </form>
               </>
             ) : (
               <div className="py-20 text-center">
+                <div className="text-5xl mb-6">✅</div>
                 <h3 className="text-3xl font-black uppercase tracking-tighter mb-4">C'EST ENVOYÉ !</h3>
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">ON VOUS RECONTACTE TRÈS VITE.</p>
               </div>
             )}
-            <button onClick={() => setShowPopup(false)} className="absolute top-8 right-10 font-black text-slate-200 hover:text-slate-900 uppercase text-[9px]">FERMER</button>
+            <button onClick={() => setShowPopup(false)} className="absolute top-8 right-10 font-black text-slate-300 hover:text-slate-900 uppercase text-[9px] transition-colors">FERMER [X]</button>
           </div>
         </div>
       )}
