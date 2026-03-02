@@ -76,7 +76,7 @@ export default function HomePage() {
         
         <header className="flex justify-between items-center mb-24">
           <img src="/logoweb.jpg" alt="FACULTEE Logo" className="h-14 w-auto object-contain" />
-          <p className="text-[10px] font-black tracking-[0.4em] text-white/50 uppercase italic">Signature Textile Française</p>
+          <p className="text-[10px] font-black tracking-[0.4em] text-white/50 uppercase italic">Studio de Personnalisation Textile & Goodies</p>
         </header>
 
         {/* TITRE ICONIQUE RÉINSTAURÉ */}
@@ -90,7 +90,7 @@ export default function HomePage() {
           <div className="md:col-span-8 bg-white/5 rounded-[3.5rem] border border-white/10 p-12 space-y-12 shadow-2xl">
             
             <div className="space-y-6">
-              <h2 className="text-2xl font-black uppercase italic tracking-tight">Configuration</h2>
+              <h2 className="text-2xl font-black uppercase italic tracking-tight">LE STUDIO</h2>
               <p className="text-[10px] font-black text-white/40 tracking-[0.3em] uppercase">01. Sélection du support</p>
               
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -203,27 +203,26 @@ export default function HomePage() {
             <div>
               <img src="/logoweb.jpg" alt="Logo" className="h-10 w-auto mb-8 opacity-80" />
               <p className="text-[10px] font-black text-white/40 uppercase tracking-widest leading-relaxed">
-                Signature textile française. Le studio spécialisé dans la personnalisation haut de gamme et l'accompagnement créatif.
+                Facultee spécialisé dans la personnalisation textiles & goodies et l'accompagnement créatif.
               </p>
             </div>
             <div className="space-y-4">
               <h4 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/80">Contact</h4>
-              <p className="text-xs font-black uppercase">Facultée@outlook.com</p>
-              <p className="text-xs font-black uppercase">Europe - Livraison Incluse</p>
+              <p className="text-xs font-black uppercase">Facultee@outlook.com</p>
+              <p className="text-xs font-black uppercase">06 37 84 58 16</p>
             </div>
             <div className="space-y-4">
               <h4 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/80">Réseaux</h4>
               <div className="flex gap-8 text-xs font-black uppercase">
                 <a href="#" className="hover:text-white/60 transition-colors">Instagram</a>
-                <a href="#" className="hover:text-white/60 transition-colors">LinkedIn</a>
+          
               </div>
             </div>
           </div>
           <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-[9px] font-black uppercase tracking-[0.5em] text-white/20">
-            <span>© 2026 FACULTÉE STUDIO</span>
+            <span>© 2026 FACULTEE </span>
             <div className="flex gap-8">
-              <a href="#">Mentions Légales</a>
-              <a href="#">Conditions de vente</a>
+         
             </div>
           </div>
         </footer>
