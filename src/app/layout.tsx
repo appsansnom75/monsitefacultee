@@ -5,6 +5,10 @@ export const metadata: Metadata = {
   title: "FACULTEE | Studio de Personnalisation Textile Premium",
   description: "Devis en ligne immédiat pour T-shirts bio, Hoodies et Tote-bags. Experts en Sérigraphie, Broderie et Impression numérique à Paris. Qualité premium, livraison offerte.",
   keywords: ["personnalisation textile", "sérigraphie", "broderie", "t-shirt personnalisé", "facultee"],
+  // AJOUT DU FAVICON ICI
+  icons: {
+    icon: "/favicon.ico",
+  },
   // TON CODE DE VERIFICATION GOOGLE ICI :
   verification: {
     google: "cGIBDY-t-1as5S1yhO8HmVKxWGLBzBuIZpPecy6Vud4",
