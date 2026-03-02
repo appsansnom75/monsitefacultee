@@ -69,7 +69,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white p-6 md:p-12 font-sans selection:bg-white selection:text-slate-900">
+    <div className="min-h-screen bg-[#002344] text-white p-6 md:p-12 font-sans selection:bg-white selection:text-slate-900">
       <div className="max-w-6xl mx-auto mb-20">
         
         {/* HEADER */}
@@ -214,13 +214,13 @@ export default function HomePage() {
           </div>
           <div>
             <p className="text-white text-[10px] mb-4">LIVRAISON</p>
-            <p>OFFERTE SUR TOUTE LA FRANCE.</p>
-            <p className="mt-2">DÉLAI MOYEN : 7 À 12 JOURS OUVRES.</p>
+            <p>OFFERTE SUR TOUTE L'EUROPE'.</p>
+            <p className="mt-2">DÉLAI MOYEN : 5 À 10 JOURS OUVRES.</p>
           </div>
           <div>
             <p className="text-white text-[10px] mb-4">CONTACT</p>
             <p>FACULTEE@OUTLOOK.COM</p>
-            <p className="mt-2">INSTAGRAM : @FACULTEE_</p>
+            <p className="mt-2">INSTAGRAM : @FACULTEE.FR</p>
           </div>
         </div>
       </footer>
