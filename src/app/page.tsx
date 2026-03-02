@@ -38,15 +38,14 @@ const FORFAITS_BRODERIE = [
 const EMPLACEMENTS = ['CŒUR', 'CENTRAL', 'DOS', 'MANCHE'];
 
 export default function HomePage() {
-  const [isOpen, setIsOpen] = useState(false);
   const [produitId, setProduitId] = useState(PRODUITS[0].id);
   const [quantite, setQuantite] = useState(10);
   const [showPopup, setShowPopup] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // ÉTATS DES MARQUAGES
   const [seriChoices, setSeriChoices] = useState<SeriChoice[]>([]);
   const [numChoices, setNumChoices] = useState<SimpleChoice[]>([]);
-  const [broderieChoices, setBroderieChoices] = useState<number[]>([]); // Index de l'emplacement
+  const [broderieChoices, setBroderieChoices] = useState<number[]>([]);
 
   const produit = PRODUITS.find(p => p.id === produitId) || PRODUITS[0];
   const getPalier = (arr: any[]) => [...arr].reverse().find(f => quantite >= f.qte) || arr[0];
@@ -58,151 +57,191 @@ export default function HomePage() {
   const totalHT = (produit.prixBase * quantite) + totalSerigraphie + totalNumerique + totalBroderie;
   const totalTTC = totalHT * 1.20;
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const response = await fetch("https://formspree.io/f/xwvobjgj", {
+      method: "POST", body: formData, headers: { 'Accept': 'application/json' }
+    });
+    if (response.ok) { 
+        setIsSubmitted(true); 
+        setTimeout(() => { setShowPopup(false); setIsSubmitted(false); }, 3000); 
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-[#002344] text-white selection:bg-white selection:text-[#002344] font-sans">
+    <div className="min-h-screen bg-[#002344] text-white selection:bg-white selection:text-[#002344] font-sans pb-12">
       
       <div className="max-w-6xl mx-auto px-8 py-12">
         
         <header className="flex justify-between items-center mb-24">
-          <img src="/logoweb.jpg" alt="Logo" className="h-10 w-auto object-contain" />
-          <span className="text-[10px] font-black tracking-[0.5em] text-white/40 uppercase italic">Studio de Personnalisation Textile</span>
+          <img src="/logoweb.jpg" alt="FACULTEE Logo" className="h-14 w-auto object-contain" />
+          <p className="text-[10px] font-black tracking-[0.4em] text-white/50 uppercase italic">Studio de Personnalisation Textile</p>
         </header>
 
-        <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.85] uppercase italic mb-20">
-          Créez <br /> <span className="text-outline-white text-transparent">L'Iconique.</span>
+        <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.85] uppercase italic mb-20">
+          Le <span className="text-outline-white text-transparent">Studio.</span>
         </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
           
-          {/* CARTE CONFIGURATEUR */}
-          <div className={`md:col-span-8 rounded-[3.5rem] transition-all duration-700 border border-white/10 ${isOpen ? 'bg-white/10' : 'bg-white/5'}`}>
-            <button 
-              onClick={() => setIsOpen(!isOpen)}
-              className="w-full p-12 text-left flex justify-between items-center"
-            >
-              <div className="space-y-2">
-                <p className="text-white/40 text-[10px] font-black tracking-[0.4em] uppercase">Étape 01</p>
-                <h2 className="text-4xl font-black uppercase italic tracking-tight text-white">Le Laboratoire</h2>
+          {/* CONFIGURATEUR (OUVERT DIRECTEMENT) */}
+          <div className="md:col-span-8 bg-white/5 rounded-[3.5rem] border border-white/10 p-12 space-y-12 shadow-2xl">
+            
+            {/* CHOIX DU VÊTEMENT */}
+            <div className="space-y-6">
+              <h2 className="text-2xl font-black uppercase italic tracking-tight">Le Laboratoire</h2>
+              <p className="text-[10px] font-black text-white/40 tracking-[0.3em] uppercase">01. Sélection du support</p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {PRODUITS.map(p => (
+                  <button key={p.id} onClick={() => setProduitId(p.id)} className={`flex flex-col items-center p-5 rounded-3xl border transition-all ${produitId === p.id ? 'bg-white text-[#002344] border-white' : 'bg-transparent border-white/10 text-white hover:border-white/30'}`}>
+                    <img src={p.image} alt={p.nom} className="h-20 w-auto mb-4 object-contain" />
+                    <span className="text-[8px] font-black uppercase text-center">{p.nom}</span>
+                  </button>
+                ))}
               </div>
-              <div className={`w-14 h-14 rounded-full border border-white/20 flex items-center justify-center transition-all duration-500 ${isOpen ? 'rotate-[135deg] bg-white text-[#002344]' : ''}`}>
-                <span className="text-3xl font-light">+</span>
-              </div>
-            </button>
+            </div>
 
-            <div className={`transition-all duration-700 ease-in-out overflow-hidden ${isOpen ? 'max-h-[3000px] opacity-100' : 'max-h-0 opacity-0'}`}>
-              <div className="px-12 pb-12 space-y-12 border-t border-white/5 pt-12">
-                
-                {/* 1. CHOIX DU VÊTEMENT */}
-                <div className="space-y-4">
-                  <p className="text-[10px] font-black text-white/40 tracking-[0.3em] uppercase">01. Choix du textile</p>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {PRODUITS.map(p => (
-                      <button key={p.id} onClick={() => setProduitId(p.id)} className={`flex flex-col items-center p-4 rounded-3xl border transition-all ${produitId === p.id ? 'bg-white text-[#002344] border-white' : 'bg-transparent border-white/10 text-white hover:border-white/30'}`}>
-                        <img src={p.image} alt={p.nom} className="h-16 w-auto mb-3 object-contain" />
-                        <span className="text-[8px] font-black uppercase text-center leading-tight">{p.nom}</span>
-                      </button>
-                    ))}
+            {/* PERSONNALISATION */}
+            <div className="space-y-8">
+              <p className="text-[10px] font-black text-white/40 tracking-[0.3em] uppercase">02. Personnalisation technique</p>
+              
+              {/* SÉRIGRAPHIE */}
+              <div className="bg-white/5 p-8 rounded-[2.5rem] border border-white/5">
+                <div className="flex justify-between items-center mb-6">
+                  <span className="text-[11px] font-black uppercase tracking-widest">Sérigraphie</span>
+                  <button onClick={() => setSeriChoices([...seriChoices, {place: 'CŒUR', colors: 0}])} className="bg-white text-[#002344] text-[9px] px-5 py-2 rounded-full font-black hover:scale-105 transition-transform">AJOUTER</button>
+                </div>
+                {seriChoices.map((s, i) => (
+                  <div key={i} className="flex gap-3 mb-3 animate-in slide-in-from-left-2 duration-300">
+                    <select className="flex-1 bg-[#002344] p-4 rounded-2xl text-[10px] font-black uppercase border-none text-white focus:ring-0" value={s.place} onChange={(e) => { const newC = [...seriChoices]; newC[i].place = e.target.value; setSeriChoices(newC); }}>{EMPLACEMENTS.map(e => <option key={e} value={e}>{e}</option>)}</select>
+                    <select className="w-32 bg-[#002344] p-4 rounded-2xl text-[10px] font-black uppercase border-none text-white focus:ring-0" value={s.colors} onChange={(e) => { const newC = [...seriChoices]; newC[i].colors = Number(e.target.value); setSeriChoices(newC); }}>{[1,2,3,4,5,6,7,8].map((n, idx) => <option key={idx} value={idx}>{n} COUL.</option>)}</select>
+                    <button onClick={() => setSeriChoices(seriChoices.filter((_, idx) => idx !== i))} className="text-red-400 px-3 font-black text-xl hover:scale-110 transition-transform">✕</button>
                   </div>
-                </div>
-
-                {/* 2. SÉRIGRAPHIE */}
-                <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                        <p className="text-[10px] font-black text-white/40 tracking-[0.3em] uppercase">02. Sérigraphie</p>
-                        <button onClick={() => setSeriChoices([...seriChoices, {place: 'CŒUR', colors: 0}])} className="text-[9px] font-black bg-white text-[#002344] px-4 py-2 rounded-full">+ AJOUTER</button>
-                    </div>
-                    {seriChoices.map((s, i) => (
-                        <div key={i} className="flex gap-3 bg-white/5 p-3 rounded-2xl animate-in fade-in zoom-in duration-300">
-                            <select className="flex-1 bg-[#002344] p-3 rounded-xl text-[10px] font-black uppercase border-none text-white" value={s.place} onChange={(e) => { const newC = [...seriChoices]; newC[i].place = e.target.value; setSeriChoices(newC); }}>{EMPLACEMENTS.map(e => <option key={e} value={e}>{e}</option>)}</select>
-                            <select className="w-24 bg-[#002344] p-3 rounded-xl text-[10px] font-black uppercase border-none text-white" value={s.colors} onChange={(e) => { const newC = [...seriChoices]; newC[i].colors = Number(e.target.value); setSeriChoices(newC); }}>{[1,2,3,4,5,6,7,8].map((n, idx) => <option key={idx} value={idx}>{n} COUL.</option>)}</select>
-                            <button onClick={() => setSeriChoices(seriChoices.filter((_, idx) => idx !== i))} className="text-red-400 px-2 font-black">✕</button>
-                        </div>
-                    ))}
-                </div>
-
-                {/* 3. NUMÉRIQUE */}
-                <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                        <p className="text-[10px] font-black text-white/40 tracking-[0.3em] uppercase">03. Impression Numérique</p>
-                        <button onClick={() => setNumChoices([...numChoices, {place: 'CŒUR'}])} className="text-[9px] font-black bg-white text-[#002344] px-4 py-2 rounded-full">+ AJOUTER</button>
-                    </div>
-                    {numChoices.map((n, i) => (
-                        <div key={i} className="flex gap-3 bg-white/5 p-3 rounded-2xl animate-in fade-in zoom-in duration-300">
-                            <select className="flex-1 bg-[#002344] p-3 rounded-xl text-[10px] font-black uppercase border-none text-white" value={n.place} onChange={(e) => { const newC = [...numChoices]; newC[i].place = e.target.value; setNumChoices(newC); }}>{EMPLACEMENTS.map(e => <option key={e} value={e}>{e}</option>)}</select>
-                            <button onClick={() => setNumChoices(numChoices.filter((_, idx) => idx !== i))} className="text-red-400 px-2 font-black">✕</button>
-                        </div>
-                    ))}
-                </div>
-
-                {/* 4. BRODERIE */}
-                <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                        <p className="text-[10px] font-black text-white/40 tracking-[0.3em] uppercase">04. Broderie</p>
-                        <button onClick={() => setBroderieChoices([...broderieChoices, 0])} className="text-[9px] font-black bg-white text-[#002344] px-4 py-2 rounded-full">+ AJOUTER</button>
-                    </div>
-                    {broderieChoices.map((b, i) => (
-                        <div key={i} className="flex gap-3 bg-white/5 p-3 rounded-2xl animate-in fade-in zoom-in duration-300">
-                            <select className="flex-1 bg-[#002344] p-3 rounded-xl text-[10px] font-black uppercase border-none text-white" value={b} onChange={(e) => { const newC = [...broderieChoices]; newC[i] = Number(e.target.value); setBroderieChoices(newC); }}>
-                                <option value={0}>CŒUR</option>
-                                <option value={1}>CENTRAL</option>
-                                <option value={2}>DOS</option>
-                            </select>
-                            <button onClick={() => setBroderieChoices(broderieChoices.filter((_, idx) => idx !== i))} className="text-red-400 px-2 font-black">✕</button>
-                        </div>
-                    ))}
-                </div>
-
-                {/* 5. VOLUME */}
-                <div className="space-y-6 pt-4 border-t border-white/5">
-                  <div className="flex justify-between items-end">
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">05. Volume de commande</span>
-                    <span className="text-4xl font-black italic">{quantite} <span className="text-[10px] not-italic text-white/30 uppercase">unités</span></span>
-                  </div>
-                  <input type="range" min="10" max="200" step="10" value={quantite} onChange={(e) => setQuantite(Number(e.target.value))} className="w-full accent-white bg-white/10 h-1 rounded-full appearance-none cursor-pointer" />
-                </div>
+                ))}
               </div>
+
+              {/* IMPRESSION NUMÉRIQUE */}
+              <div className="bg-white/5 p-8 rounded-[2.5rem] border border-white/5">
+                <div className="flex justify-between items-center mb-6">
+                  <span className="text-[11px] font-black uppercase tracking-widest">Impression Numérique</span>
+                  <button onClick={() => setNumChoices([...numChoices, {place: 'CŒUR'}])} className="bg-white text-[#002344] text-[9px] px-5 py-2 rounded-full font-black hover:scale-105 transition-transform">AJOUTER</button>
+                </div>
+                {numChoices.map((n, i) => (
+                  <div key={i} className="flex gap-3 mb-3 animate-in slide-in-from-left-2 duration-300">
+                    <select className="flex-1 bg-[#002344] p-4 rounded-2xl text-[10px] font-black uppercase border-none text-white focus:ring-0" value={n.place} onChange={(e) => { const newC = [...numChoices]; newC[i].place = e.target.value; setNumChoices(newC); }}>{EMPLACEMENTS.map(e => <option key={e} value={e}>{e}</option>)}</select>
+                    <button onClick={() => setNumChoices(numChoices.filter((_, idx) => idx !== i))} className="text-red-400 px-3 font-black text-xl hover:scale-110 transition-transform">✕</button>
+                  </div>
+                ))}
+              </div>
+
+              {/* BRODERIE */}
+              <div className="bg-white/5 p-8 rounded-[2.5rem] border border-white/5">
+                <div className="flex justify-between items-center mb-6">
+                  <span className="text-[11px] font-black uppercase tracking-widest">Broderie</span>
+                  <button onClick={() => setBroderieChoices([...broderieChoices, 0])} className="bg-white text-[#002344] text-[9px] px-5 py-2 rounded-full font-black hover:scale-105 transition-transform">AJOUTER</button>
+                </div>
+                {broderieChoices.map((b, i) => (
+                  <div key={i} className="flex gap-3 mb-3 animate-in slide-in-from-left-2 duration-300">
+                    <select className="flex-1 bg-[#002344] p-4 rounded-2xl text-[10px] font-black uppercase border-none text-white focus:ring-0" value={b} onChange={(e) => { const newC = [...broderieChoices]; newC[i] = Number(e.target.value); setBroderieChoices(newC); }}>
+                        <option value={0}>CŒUR</option>
+                        <option value={1}>CENTRAL</option>
+                        <option value={2}>DOS</option>
+                    </select>
+                    <button onClick={() => setBroderieChoices(broderieChoices.filter((_, idx) => idx !== i))} className="text-red-400 px-3 font-black text-xl hover:scale-110 transition-transform">✕</button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* QUANTITÉ SLIDER */}
+            <div className="space-y-6 pt-6 border-t border-white/5">
+                <div className="flex justify-between items-end">
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">03. Volume de commande</span>
+                    <span className="text-5xl font-black italic">{quantite} <span className="text-[10px] not-italic text-white/30">UNITÉS</span></span>
+                </div>
+                <input type="range" min="10" max="200" step="10" value={quantite} onChange={(e) => setQuantite(Number(e.target.value))} className="w-full accent-white bg-white/10 h-1.5 rounded-full appearance-none cursor-pointer" />
             </div>
           </div>
 
-          {/* CARTE GUIDE */}
-          <div className="md:col-span-4 space-y-6">
-              <a href="/guide.pdf" download className="block group relative overflow-hidden rounded-[3rem] bg-gradient-to-b from-[#00386e] to-[#002344] p-12 min-h-[300px] border border-white/10 shadow-2xl transition-all hover:scale-[0.98]">
-                <p className="text-white/40 text-[10px] font-black tracking-[0.4em] uppercase">Étape 02</p>
-                <h2 className="text-4xl font-black uppercase italic mt-4 leading-tight">Le Guide <br /> Ultime</h2>
-                <div className="mt-12 flex items-center gap-3 font-black text-[10px] tracking-[0.3em] uppercase group-hover:translate-x-3 transition-transform">
-                  Télécharger <span>↓</span>
+          {/* COLONNE RÉCAPITULATIF & GUIDE */}
+          <div className="md:col-span-4 space-y-8 sticky top-12">
+              
+              <div className="bg-white text-[#002344] p-12 rounded-[3.5rem] shadow-2xl">
+                <p className="text-[10px] font-black text-[#002344]/40 uppercase tracking-widest text-center mb-8 italic">Votre Estimation</p>
+                <p className="text-6xl font-black italic text-center mb-10 tracking-tighter">{totalTTC.toFixed(2)}€</p>
+                <button onClick={() => setShowPopup(true)} className="w-full bg-[#002344] text-white py-8 rounded-[2.5rem] font-black uppercase text-[10px] tracking-[0.5em] hover:scale-105 transition-transform shadow-xl">
+                  Valider le projet
+                </button>
+              </div>
+
+              <a href="/guide.pdf" download className="group block bg-gradient-to-br from-[#00488d] to-[#002344] p-10 rounded-[3rem] border border-white/10 transition-all hover:scale-[0.98]">
+                <h3 className="text-3xl font-black uppercase italic leading-tight text-white mb-6">Besoin d'aide <br /> pour votre commande ?</h3>
+                <p className="text-[10px] font-bold text-white/50 tracking-widest uppercase mb-8">Guide complet pour réussir votre projet de personnalisation.</p>
+                <div className="flex items-center gap-3 font-black text-[10px] tracking-[0.4em] uppercase group-hover:translate-x-3 transition-transform">
+                  Télécharger le guide <span>↓</span>
                 </div>
               </a>
 
-              {/* RÉCAPITULATIF PRIX FIXÉ SUR LE CÔTÉ */}
-              <div className="bg-white text-[#002344] p-10 rounded-[3rem] shadow-2xl">
-                <p className="text-[10px] font-black text-[#002344]/40 uppercase tracking-widest text-center mb-6">Estimation TTC</p>
-                <p className="text-5xl font-black italic text-center mb-8 tracking-tighter">{totalTTC.toFixed(2)}€</p>
-                <button onClick={() => setShowPopup(true)} className="w-full bg-[#002344] text-white py-6 rounded-3xl font-black uppercase text-[10px] tracking-[0.4em] hover:scale-105 transition-transform">
-                  Valider mon projet
-                </button>
+              {/* VISUEL DYNAMIQUE */}
+              <div className="pt-8 flex justify-center">
+                 <img key={produitId} src={produit.image} alt={produit.nom} className="h-48 w-auto object-contain drop-shadow-[0_20px_20px_rgba(0,0,0,0.4)] animate-in fade-in zoom-in duration-500" />
               </div>
           </div>
         </div>
 
-        {/* FOOTER */}
-        <footer className="mt-40 border-t border-white/5 py-12 flex justify-between items-center opacity-30 text-[9px] font-black uppercase tracking-[0.5em]">
-            <p>FACULTEE STUDIO — 2026</p>
-            <p>FACULTEE@OUTLOOK.COM</p>
+        {/* FOOTER COMPLET RÉINSTAURÉ */}
+        <footer className="mt-40 border-t border-white/10 pt-20">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-20">
+            <div>
+              <img src="/logoweb.jpg" alt="Logo" className="h-10 w-auto mb-8 opacity-80" />
+              <p className="text-[10px] font-black text-white/40 uppercase tracking-widest leading-relaxed">
+                Le studio de production textile spécialisé dans la personnalisation haut de gamme. Qualité, précision et accompagnement sur-mesure.
+              </p>
+            </div>
+            <div className="space-y-4">
+              <h4 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/80">Contact</h4>
+              <p className="text-xs font-black uppercase">Facultée@outlook.com</p>
+              <p className="text-xs font-black uppercase">Europe - Livraison Incluse</p>
+            </div>
+            <div className="space-y-4">
+              <h4 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/80">Social</h4>
+              <div className="flex gap-8 text-xs font-black uppercase">
+                <a href="#" className="hover:text-white/60 transition-colors">Instagram</a>
+                <a href="#" className="hover:text-white/60 transition-colors">LinkedIn</a>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-[9px] font-black uppercase tracking-[0.5em] text-white/20">
+            <span>© 2026 FACULTÉE STUDIO</span>
+            <div className="flex gap-8">
+              <a href="#">Mentions Légales</a>
+              <a href="#">CGV</a>
+            </div>
+          </div>
         </footer>
       </div>
 
-      {/* POPUP */}
+      {/* POPUP DEVIS */}
       {showPopup && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
           <div className="absolute inset-0 bg-[#002344]/95 backdrop-blur-md" onClick={() => setShowPopup(false)}></div>
-          <div className="bg-white text-[#002344] w-full max-w-xl p-16 rounded-[4rem] relative z-10 animate-in zoom-in duration-300 text-center">
-            <h3 className="text-5xl font-black uppercase tracking-tighter mb-8 italic">C'est parti.</h3>
-            <form className="space-y-4">
-              <input type="text" placeholder="NOM COMPLET" className="w-full border-b-2 border-[#002344]/10 p-5 font-black uppercase text-xs outline-none focus:border-[#002344]" />
-              <input type="email" placeholder="VOTRE ADRESSE MAIL" className="w-full border-b-2 border-[#002344]/10 p-5 font-black uppercase text-xs outline-none focus:border-[#002344]" />
-              <button className="w-full bg-[#002344] text-white py-8 rounded-[2rem] font-black uppercase text-[10px] tracking-[0.5em] mt-8 transition-all active:scale-95">Envoyer la demande</button>
-            </form>
+          <div className="bg-white text-[#002344] w-full max-w-xl p-16 rounded-[4rem] relative z-10 animate-in zoom-in duration-300">
+            {!isSubmitted ? (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <h3 className="text-5xl font-black uppercase tracking-tighter mb-8 italic">Suivante.</h3>
+                <input type="text" name="Nom" required placeholder="NOM COMPLET" className="w-full border-b-2 border-[#002344]/10 p-5 font-black uppercase text-xs outline-none focus:border-[#002344]" />
+                <input type="email" name="Email" required placeholder="ADRESSE MAIL" className="w-full border-b-2 border-[#002344]/10 p-5 font-black uppercase text-xs outline-none focus:border-[#002344]" />
+                <textarea name="Message" placeholder="PRÉCISEZ VOTRE PROJET ICI..." rows={3} className="w-full border-b-2 border-[#002344]/10 p-5 font-black uppercase text-xs outline-none focus:border-[#002344] resize-none" />
+                <button type="submit" className="w-full bg-[#002344] text-white py-8 rounded-[2rem] font-black uppercase text-[11px] tracking-[0.5em] mt-8 hover:scale-[1.02] transition-transform">Envoyer ma demande</button>
+              </form>
+            ) : (
+              <div className="py-20 text-center space-y-4">
+                <h3 className="text-4xl font-black uppercase italic">Envoyé !</h3>
+                <p className="text-[10px] font-black uppercase tracking-widest text-[#002344]/40">Nous revenons vers vous rapidement.</p>
+              </div>
+            )}
+            <button onClick={() => setShowPopup(false)} className="absolute top-12 right-12 text-[#002344]/20 hover:text-[#002344] font-black text-xs uppercase tracking-widest">Fermer [✕]</button>
           </div>
         </div>
       )}
