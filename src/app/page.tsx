@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import Image from 'next/image'; // Importation optimisée pour Next.js
 
 // --- DONNÉES DE PRIX ---
 const PRODUITS = [
@@ -74,7 +75,13 @@ export default function HomePage() {
         
         {/* HEADER */}
         <header className="mb-16 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <h1 className="text-4xl font-black tracking-tighter uppercase border-l-8 border-white pl-6">FACULTEE</h1>
+          <div className="relative h-12 w-48">
+             <img 
+               src="/logo.png" 
+               alt="FACULTEE Logo" 
+               className="h-full w-auto object-contain"
+             />
+          </div>
           <p className="text-[10px] font-black tracking-[0.4em] text-slate-500 uppercase">STUDIO DE PERSONNALISATION TEXTILE</p>
         </header>
 
@@ -93,7 +100,6 @@ export default function HomePage() {
                     {p.nom}
                   </button>
                 ))}
-                {/* RETOUR DU BOUTON AUTRES */}
                 <button onClick={() => setShowPopup(true)} className="p-5 rounded-xl border-2 border-dashed border-slate-700 text-slate-500 font-black text-[10px] tracking-widest hover:border-white hover:text-white transition-all uppercase">AUTRES +</button>
               </div>
             </div>
@@ -166,8 +172,6 @@ export default function HomePage() {
 
           {/* COLONNE DROITE : RÉCAPITULATIF + IMAGE */}
           <div className="sticky top-12">
-            
-            {/* L'IMAGE QUI CHANGE SANS FLOTTEMENT */}
             <div className="flex justify-center mb-[-40px] relative z-10 pointer-events-none">
               <img 
                 key={produit.id}
@@ -204,7 +208,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* FOOTER COMPLET FACULTEE.FR */}
+      {/* FOOTER */}
       <footer className="max-w-6xl mx-auto border-t border-slate-800 pt-20 pb-10 px-6">
         <div className="grid md:grid-cols-3 gap-12 text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
           <div>
@@ -214,7 +218,7 @@ export default function HomePage() {
           </div>
           <div>
             <p className="text-white text-[10px] mb-4">LIVRAISON</p>
-            <p>OFFERTE SUR TOUTE L'EUROPE'.</p>
+            <p>OFFERTE SUR TOUTE L'EUROPE.</p>
             <p className="mt-2">DÉLAI MOYEN : 5 À 10 JOURS OUVRES.</p>
           </div>
           <div>
@@ -225,7 +229,7 @@ export default function HomePage() {
         </div>
       </footer>
 
-      {/* POPUP DE DEVIS */}
+      {/* POPUP */}
       {showPopup && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md" onClick={() => setShowPopup(false)}></div>
