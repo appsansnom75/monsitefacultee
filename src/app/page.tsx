@@ -77,7 +77,7 @@ export default function HomePage() {
         <header className="mb-16 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
           <div className="relative">
              <img 
-               src="/logo.png" 
+               src="/logoweb.jpg" 
                alt="FACULTEE Logo" 
                className="h-36 w-auto object-contain"
              />
