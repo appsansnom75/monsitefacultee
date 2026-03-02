@@ -79,14 +79,12 @@ export default function HomePage() {
           <p className="text-[10px] font-black tracking-[0.4em] text-white/50 uppercase italic">Studio de Personnalisation Textile & Goodies</p>
         </header>
 
-        {/* TITRE ICONIQUE RÉINSTAURÉ */}
         <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.85] uppercase italic mb-20">
           Créez <br /> <span className="text-outline-white text-transparent">L'Iconique.</span>
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
           
-          {/* CONFIGURATEUR OUVERT */}
           <div className="md:col-span-8 bg-white/5 rounded-[3.5rem] border border-white/10 p-12 space-y-12 shadow-2xl">
             
             <div className="space-y-6">
@@ -101,7 +99,6 @@ export default function HomePage() {
                   </button>
                 ))}
                 
-                {/* CASE AUTRE VÊTEMENT / GOODIES */}
                 <button 
                   onClick={() => setShowPopup(true)} 
                   className="flex flex-col items-center justify-center p-5 rounded-3xl border border-dashed border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-white transition-all group"
@@ -116,7 +113,6 @@ export default function HomePage() {
             <div className="space-y-8">
               <p className="text-[10px] font-black text-white/40 tracking-[0.3em] uppercase">02. Personnalisation technique</p>
               
-              {/* SÉRIGRAPHIE */}
               <div className="bg-white/5 p-8 rounded-[2.5rem] border border-white/5">
                 <div className="flex justify-between items-center mb-6">
                   <span className="text-[11px] font-black uppercase tracking-widest">Sérigraphie</span>
@@ -131,7 +127,6 @@ export default function HomePage() {
                 ))}
               </div>
 
-              {/* IMPRESSION NUMÉRIQUE */}
               <div className="bg-white/5 p-8 rounded-[2.5rem] border border-white/5">
                 <div className="flex justify-between items-center mb-6">
                   <span className="text-[11px] font-black uppercase tracking-widest">Impression Numérique</span>
@@ -145,7 +140,6 @@ export default function HomePage() {
                 ))}
               </div>
 
-              {/* BRODERIE */}
               <div className="bg-white/5 p-8 rounded-[2.5rem] border border-white/5">
                 <div className="flex justify-between items-center mb-6">
                   <span className="text-[11px] font-black uppercase tracking-widest">Broderie</span>
@@ -173,12 +167,11 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* RÉCAPITULATIF & GUIDE */}
           <div className="md:col-span-4 space-y-8 sticky top-12">
               <div className="bg-white text-[#002344] p-12 rounded-[3.5rem] shadow-2xl">
                 <p className="text-[10px] font-black text-[#002344]/40 uppercase tracking-widest text-center mb-8 italic">Votre Estimation</p>
                 <p className="text-6xl font-black italic text-center mb-10 tracking-tighter">{totalTTC.toFixed(2)}€</p>
-                <button onClick={() => setShowPopup(true)} className="w-full bg-[#002344] text-white py-8 rounded-[2.5rem] font-black uppercase text-[10px] tracking-[0.5em] hover:scale-105 transition-transform shadow-xl">
+                <button onClick={() => setShowPopup(true)} className="w-full bg-[#002344] text-white py-8 rounded-[2.5rem] font-black uppercase text-[10px] tracking-[0.5em] hover:scale-[1.02] transition-transform shadow-xl">
                   Valider le projet
                 </button>
               </div>
@@ -190,14 +183,9 @@ export default function HomePage() {
                   Télécharger le guide <span>↓</span>
                 </div>
               </a>
-
-              <div className="pt-8 flex justify-center">
-                 <img key={produitId} src={produit.image} alt={produit.nom} className="h-48 w-auto object-contain drop-shadow-[0_20px_20px_rgba(0,0,0,0.4)] animate-in fade-in zoom-in duration-500" />
-              </div>
           </div>
         </div>
 
-        {/* FOOTER COMPLET RÉINSTAURÉ */}
         <footer className="mt-40 border-t border-white/10 pt-20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-20">
             <div>
@@ -214,21 +202,17 @@ export default function HomePage() {
             <div className="space-y-4">
               <h4 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/80">Réseaux</h4>
               <div className="flex gap-8 text-xs font-black uppercase">
-                <a href="#" className="hover:text-white/60 transition-colors">Instagram</a>
-          
+                {/* LIEN INSTAGRAM MIS À JOUR ICI */}
+                <a href="https://www.instagram.com/facultee.fr" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">Instagram</a>
               </div>
             </div>
           </div>
           <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-[9px] font-black uppercase tracking-[0.5em] text-white/20">
             <span>© 2026 FACULTEE </span>
-            <div className="flex gap-8">
-         
-            </div>
           </div>
         </footer>
       </div>
 
-      {/* POPUP DE CONTACT */}
       {showPopup && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
           <div className="absolute inset-0 bg-[#002344]/95 backdrop-blur-md" onClick={() => setShowPopup(false)}></div>
