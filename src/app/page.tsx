@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import Image from 'next/image'; // Importation optimisée pour Next.js
+import Image from 'next/image';
 
 // --- DONNÉES DE PRIX ---
 const PRODUITS = [
@@ -73,13 +73,13 @@ export default function HomePage() {
     <div className="min-h-screen bg-[#002344] text-white p-6 md:p-12 font-sans selection:bg-white selection:text-slate-900">
       <div className="max-w-6xl mx-auto mb-20">
         
-        {/* HEADER */}
-        <header className="mb-16 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div className="relative h-12 w-48">
+        {/* HEADER AVEC LOGO AGRANDI x3 */}
+        <header className="mb-16 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+          <div className="relative">
              <img 
                src="/logo.png" 
                alt="FACULTEE Logo" 
-               className="h-full w-auto object-contain"
+               className="h-36 w-auto object-contain"
              />
           </div>
           <p className="text-[10px] font-black tracking-[0.4em] text-slate-500 uppercase">STUDIO DE PERSONNALISATION TEXTILE</p>
