@@ -14,6 +14,15 @@ const PRODUITS: Produit[] = [
   { id: 'TOTEBAG', nom: 'TOTE BAG', prixBase: 1.44, image: '/tblanc.png' },
 ];
 
+const FAQS = [
+  { q: "Quels types de produits proposez-vous ?", a: "Nous proposons des T-shirts, sweats, polos, casquettes, tote bags et divers goodies personnalisables  sur mesure" },
+  { q: "Quelles techniques de personnalisation utilisez-vous ?", a: "Nous utilisons la sérigraphie, la broderie, le flocage et l’impression numérique, et bien d'autres techniques selon les produits, vos besoins et votre budget." },
+  { q: "Quelle est la quantité minimum pour une commande ?", a: "Aucune quantité minimum obligatoire pour certaines références, et nous proposons des tarifs adaptés pour les commandes en petite ou grande série." },
+  { q: "Quels sont les délais de production et de livraison ?", a: "Le devis est généralement fourni sous 24h maximum, la production dure environ 5 à 7jours ouvrés selon la quantité, et la livraison s’effectue en France et à l’international." },
+  { q: "Puis-je voir un aperçu de mon design avant de commander ?", a: "Oui ! Nous fournissons un aperçu numérique de votre design sur le produit choisi avant de lancer la production." },
+  { q: "Proposez-vous des produits éco-responsables ?", a: "Oui, nous proposons une sélection de produits biologiques et recyclés, ainsi que des techniques d’impression respectueuses de l’environnement." },
+];
+
 const FORFAITS_SERIGRAPHIE = [
   { qte: 10, couleurs: [53.42, 92.16, 130.90, 169.63, 208.37, 247.10, 285.84, 324.58] },
   { qte: 20, couleurs: [70.85, 112.32, 153.79, 195.26, 236.74, 278.21, 316.80, 361.15] },
@@ -42,6 +51,7 @@ export default function HomePage() {
   const [quantite, setQuantite] = useState(10);
   const [showPopup, setShowPopup] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const [seriChoices, setSeriChoices] = useState<SeriChoice[]>([]);
   const [numChoices, setNumChoices] = useState<SimpleChoice[]>([]);
@@ -185,7 +195,32 @@ export default function HomePage() {
           </div>
         </div>
 
-        <footer className="mt-40 border-t border-white/10 pt-20">
+        {/* --- SECTION FAQ --- */}
+        <div className="mt-40 space-y-12">
+          <h2 className="text-4xl font-black uppercase italic tracking-tighter">Questions fréquentes</h2>
+          <div className="grid grid-cols-1 gap-4">
+            {FAQS.map((faq, idx) => (
+              <div key={idx} className="border-b border-white/10 pb-4">
+                <button 
+                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                  className="w-full flex justify-between items-center py-4 text-left group"
+                >
+                  <span className={`text-xs md:text-sm font-black uppercase tracking-widest transition-colors ${openFaq === idx ? 'text-white' : 'text-white/60 group-hover:text-white'}`}>
+                    {faq.q}
+                  </span>
+                  <span className={`text-xl font-black transition-transform duration-300 ${openFaq === idx ? 'rotate-45' : ''}`}>+</span>
+                </button>
+                <div className={`overflow-hidden transition-all duration-300 ease-in-out ${openFaq === idx ? 'max-h-40 opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+                  <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest leading-relaxed text-white/40 max-w-2xl">
+                    {faq.a}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <footer className="mt-20 border-t border-white/10 pt-20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-20">
             <div>
               <img src="/logoweb.jpg" alt="Logo" className="h-10 w-auto mb-8 opacity-80" />
