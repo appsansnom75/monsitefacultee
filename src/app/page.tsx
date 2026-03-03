@@ -103,7 +103,7 @@ export default function HomePage() {
                   onClick={() => setShowPopup(true)} 
                   className="flex flex-col items-center justify-center p-5 rounded-3xl border border-dashed border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-white transition-all group"
                 >
-                  <div className="text-2xl mb-2 group-hover:scale-110 transition-transform">✨</div>
+                  <div className="text-2xl mb-2 group-hover:scale-110 transition-transform"></div>
                   <span className="text-[8px] font-black uppercase text-center leading-tight">Projet<br/>Sur-Mesure</span>
                   <span className="text-[6px] font-black opacity-30 mt-1 uppercase tracking-widest">Goodies & autres</span>
                 </button>
