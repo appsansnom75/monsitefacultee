@@ -76,7 +76,7 @@ export default function HomePage() {
         
         <header className="flex justify-between items-center mb-24">
           <img src="/logoweb.jpg" alt="FACULTEE Logo" className="h-14 w-auto object-contain" />
-          <p className="text-[10px] font-black tracking-[0.4em] text-white/50 uppercase italic">Studio de Personnalisation Textile & Goodies</p>
+          <p className="text-[10px] font-black tracking-[0.4em] text-white/50 uppercase">Studio de Personnalisation Textile & Goodies</p>
         </header>
 
         <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.85] uppercase italic mb-20">
@@ -88,7 +88,7 @@ export default function HomePage() {
           <div className="md:col-span-8 bg-white/5 rounded-[3.5rem] border border-white/10 p-12 space-y-12 shadow-2xl">
             
             <div className="space-y-6">
-              <h2 className="text-2xl font-black uppercase italic tracking-tight">LE STUDIO</h2>
+              <h2 className="text-2xl font-black uppercase tracking-tight">LE STUDIO</h2>
               <p className="text-[10px] font-black text-white/40 tracking-[0.3em] uppercase">01. Sélection du support</p>
               
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -103,9 +103,8 @@ export default function HomePage() {
                   onClick={() => setShowPopup(true)} 
                   className="flex flex-col items-center justify-center p-5 rounded-3xl border border-dashed border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-white transition-all group"
                 >
-                  <div className="text-2xl mb-2 group-hover:scale-110 transition-transform"></div>
                   <span className="text-[8px] font-black uppercase text-center leading-tight">Projet<br/>Sur-Mesure</span>
-                  <span className="text-[6px] font-black opacity-30 mt-1 uppercase tracking-widest">Goodies & autres</span>
+                  <span className="text-[6px] font-black opacity-30 mt-1 uppercase tracking-widest text-center">Goodies & autres</span>
                 </button>
               </div>
             </div>
@@ -161,7 +160,7 @@ export default function HomePage() {
             <div className="space-y-6 pt-6 border-t border-white/5">
                 <div className="flex justify-between items-end">
                     <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">03. Volume de commande</span>
-                    <span className="text-5xl font-black italic">{quantite} <span className="text-[10px] not-italic text-white/30">UNITÉS</span></span>
+                    <span className="text-5xl font-black">{quantite} <span className="text-[10px] text-white/30">UNITÉS</span></span>
                 </div>
                 <input type="range" min="10" max="200" step="10" value={quantite} onChange={(e) => setQuantite(Number(e.target.value))} className="w-full accent-white bg-white/10 h-1.5 rounded-full appearance-none cursor-pointer" />
             </div>
@@ -169,15 +168,15 @@ export default function HomePage() {
 
           <div className="md:col-span-4 space-y-8 sticky top-12">
               <div className="bg-white text-[#002344] p-12 rounded-[3.5rem] shadow-2xl">
-                <p className="text-[10px] font-black text-[#002344]/40 uppercase tracking-widest text-center mb-8 italic">Votre Estimation</p>
-                <p className="text-6xl font-black italic text-center mb-10 tracking-tighter">{totalTTC.toFixed(2)}€</p>
+                <p className="text-[10px] font-black text-[#002344]/40 uppercase tracking-widest text-center mb-8">Votre Estimation</p>
+                <p className="text-6xl font-black text-center mb-10 tracking-tighter">{totalTTC.toFixed(2)}€</p>
                 <button onClick={() => setShowPopup(true)} className="w-full bg-[#002344] text-white py-8 rounded-[2.5rem] font-black uppercase text-[10px] tracking-[0.5em] hover:scale-[1.02] transition-transform shadow-xl">
                   Valider le projet
                 </button>
               </div>
 
               <a href="/guide.pdf" download className="group block bg-gradient-to-br from-[#00488d] to-[#002344] p-10 rounded-[3rem] border border-white/10 transition-all hover:scale-[0.98]">
-                <h3 className="text-3xl font-black uppercase italic leading-tight text-white mb-6">Besoin d'aide <br /> pour votre projet ?</h3>
+                <h3 className="text-3xl font-black uppercase leading-tight text-white mb-6">Besoin d'aide <br /> pour votre projet ?</h3>
                 <p className="text-[10px] font-bold text-white/50 tracking-widest uppercase mb-8">Le guide exclusif pour réussir votre configuration.</p>
                 <div className="flex items-center gap-3 font-black text-[10px] tracking-[0.4em] uppercase group-hover:translate-x-3 transition-transform">
                   Télécharger le guide <span>↓</span>
@@ -202,7 +201,6 @@ export default function HomePage() {
             <div className="space-y-4">
               <h4 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/80">Réseaux</h4>
               <div className="flex gap-8 text-xs font-black uppercase">
-                {/* LIEN INSTAGRAM MIS À JOUR ICI */}
                 <a href="https://www.instagram.com/facultee.fr" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">Instagram</a>
               </div>
             </div>
@@ -219,7 +217,7 @@ export default function HomePage() {
           <div className="bg-white text-[#002344] w-full max-w-xl p-16 rounded-[4rem] relative z-10 animate-in zoom-in duration-300">
             {!isSubmitted ? (
               <form onSubmit={handleSubmit} className="space-y-6">
-                <h3 className="text-5xl font-black uppercase tracking-tighter mb-8 italic">L'Iconique.</h3>
+                <h3 className="text-5xl font-black uppercase tracking-tighter mb-8">L'Iconique.</h3>
                 <input type="text" name="Nom" required placeholder="NOM COMPLET" className="w-full border-b-2 border-[#002344]/10 p-5 font-black uppercase text-xs outline-none focus:border-[#002344]" />
                 <input type="email" name="Email" required placeholder="ADRESSE MAIL" className="w-full border-b-2 border-[#002344]/10 p-5 font-black uppercase text-xs outline-none focus:border-[#002344]" />
                 <textarea name="Message" placeholder="DÉTAILS DU PROJET (VÊTEMENTS SPÉCIFIQUES, GOODIES, LOGOS...)" rows={4} className="w-full border-b-2 border-[#002344]/10 p-5 font-black uppercase text-xs outline-none focus:border-[#002344] resize-none" />
@@ -227,7 +225,7 @@ export default function HomePage() {
               </form>
             ) : (
               <div className="py-20 text-center space-y-4">
-                <h3 className="text-4xl font-black uppercase italic">Transmis.</h3>
+                <h3 className="text-4xl font-black uppercase">Transmis.</h3>
                 <p className="text-[10px] font-black uppercase tracking-widest text-[#002344]/40">Nous revenons vers vous très vite.</p>
               </div>
             )}
