@@ -15,10 +15,10 @@ const PRODUITS: Produit[] = [
 ];
 
 const FAQS = [
-  { q: "Quels types de produits proposez-vous ?", a: "Nous proposons des T-shirts, sweats, polos, casquettes, tote bags et divers goodies personnalisables  sur mesure" },
+  { q: "Quels types de produits proposez-vous ?", a: "Nous proposons des T-shirts, sweats, polos, casquettes, tote bags et divers goodies personnalisables sur mesure." },
   { q: "Quelles techniques de personnalisation utilisez-vous ?", a: "Nous utilisons la sérigraphie, la broderie, le flocage et l’impression numérique, et bien d'autres techniques selon les produits, vos besoins et votre budget." },
   { q: "Quelle est la quantité minimum pour une commande ?", a: "Aucune quantité minimum obligatoire pour certaines références, et nous proposons des tarifs adaptés pour les commandes en petite ou grande série." },
-  { q: "Quels sont les délais de production et de livraison ?", a: "Le devis est généralement fourni sous 24h maximum, la production dure environ 5 à 7jours ouvrés selon la quantité, et la livraison s’effectue en France et à l’international." },
+  { q: "Quels sont les délais de production et de livraison ?", a: "Le devis est généralement fourni sous 24h maximum, la production dure environ 5 à 7 jours ouvrés selon la quantité, et la livraison s’effectue en France et à l’international." },
   { q: "Puis-je voir un aperçu de mon design avant de commander ?", a: "Oui ! Nous fournissons un aperçu numérique de votre design sur le produit choisi avant de lancer la production." },
   { q: "Proposez-vous des produits éco-responsables ?", a: "Oui, nous proposons une sélection de produits biologiques et recyclés, ainsi que des techniques d’impression respectueuses de l’environnement." },
 ];
@@ -119,51 +119,91 @@ export default function HomePage() {
               </div>
             </div>
 
+            {/* --- SECTION 02 : MARQUAGES MODERNISÉS --- */}
             <div className="space-y-8">
               <p className="text-[10px] font-black text-white/40 tracking-[0.3em] uppercase">02. Personnalisation technique</p>
               
-              <div className="bg-white/5 p-8 rounded-[2.5rem] border border-white/5">
-                <div className="flex justify-between items-center mb-6">
-                  <span className="text-[11px] font-black uppercase tracking-widest">Sérigraphie</span>
-                  <button onClick={() => setSeriChoices([...seriChoices, {place: 'CŒUR', colors: 0}])} className="bg-white text-[#002344] text-[9px] px-5 py-2 rounded-full font-black hover:scale-105 transition-transform">AJOUTER</button>
-                </div>
-                {seriChoices.map((s, i) => (
-                  <div key={i} className="flex gap-3 mb-3 animate-in slide-in-from-left-2 duration-300">
-                    <select className="flex-1 bg-[#002344] p-4 rounded-2xl text-[10px] font-black uppercase border-none text-white focus:ring-0" value={s.place} onChange={(e) => { const newC = [...seriChoices]; newC[i].place = e.target.value; setSeriChoices(newC); }}>{EMPLACEMENTS.map(e => <option key={e} value={e}>{e}</option>)}</select>
-                    <select className="w-32 bg-[#002344] p-4 rounded-2xl text-[10px] font-black uppercase border-none text-white focus:ring-0" value={s.colors} onChange={(e) => { const newC = [...seriChoices]; newC[i].colors = Number(e.target.value); setSeriChoices(newC); }}>{[1,2,3,4,5,6,7,8].map((n, idx) => <option key={idx} value={idx}>{n} COUL.</option>)}</select>
-                    <button onClick={() => setSeriChoices(seriChoices.filter((_, idx) => idx !== i))} className="text-red-400 px-3 font-black text-xl hover:scale-110 transition-transform">✕</button>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                {/* CARTE SÉRIGRAPHIE */}
+                <div 
+                  onClick={() => setSeriChoices([...seriChoices, {place: 'CŒUR', colors: 0}])}
+                  className="group cursor-pointer bg-white/5 p-8 rounded-[2.5rem] border border-white/5 hover:border-white/20 transition-all hover:bg-white/[0.08]"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="space-y-1">
+                      <span className="text-[11px] font-black uppercase tracking-widest block">Sérigraphie</span>
+                      <span className="text-[8px] font-bold text-white/30 uppercase italic">Volumes +</span>
+                    </div>
+                    <div className="bg-white/10 w-8 h-8 rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-[#002344] transition-colors text-xs font-black">+</div>
                   </div>
-                ))}
-              </div>
+                  
+                  {seriChoices.length > 0 && (
+                    <div className="space-y-3 mt-6 pt-6 border-t border-white/10" onClick={(e) => e.stopPropagation()}>
+                      {seriChoices.map((s, i) => (
+                        <div key={i} className="flex gap-2 animate-in slide-in-from-top-2">
+                          <select className="flex-1 bg-[#002344] py-2 px-3 rounded-xl text-[9px] font-black uppercase border border-white/10 text-white focus:ring-0 appearance-none" value={s.place} onChange={(e) => { const newC = [...seriChoices]; newC[i].place = e.target.value; setSeriChoices(newC); }}>{EMPLACEMENTS.map(e => <option key={e} value={e}>{e}</option>)}</select>
+                          <select className="w-20 bg-[#002344] py-2 px-3 rounded-xl text-[9px] font-black uppercase border border-white/10 text-white focus:ring-0 appearance-none" value={s.colors} onChange={(e) => { const newC = [...seriChoices]; newC[i].colors = Number(e.target.value); setSeriChoices(newC); }}>{[1,2,3,4,5,6,7,8].map((n, idx) => <option key={idx} value={idx}>{n} C.</option>)}</select>
+                          <button onClick={() => setSeriChoices(seriChoices.filter((_, idx) => idx !== i))} className="text-red-400/50 hover:text-red-400 px-1 font-black">✕</button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
-              <div className="bg-white/5 p-8 rounded-[2.5rem] border border-white/5">
-                <div className="flex justify-between items-center mb-6">
-                  <span className="text-[11px] font-black uppercase tracking-widest">Impression Numérique</span>
-                  <button onClick={() => setNumChoices([...numChoices, {place: 'CŒUR'}])} className="bg-white text-[#002344] text-[9px] px-5 py-2 rounded-full font-black hover:scale-105 transition-transform">AJOUTER</button>
-                </div>
-                {numChoices.map((n, i) => (
-                  <div key={i} className="flex gap-3 mb-3 animate-in slide-in-from-left-2 duration-300">
-                    <select className="flex-1 bg-[#002344] p-4 rounded-2xl text-[10px] font-black uppercase border-none text-white focus:ring-0" value={n.place} onChange={(e) => { const newC = [...numChoices]; newC[i].place = e.target.value; setNumChoices(newC); }}>{EMPLACEMENTS.map(e => <option key={e} value={e}>{e}</option>)}</select>
-                    <button onClick={() => setNumChoices(numChoices.filter((_, idx) => idx !== i))} className="text-red-400 px-3 font-black text-xl hover:scale-110 transition-transform">✕</button>
+                {/* CARTE NUMÉRIQUE */}
+                <div 
+                  onClick={() => setNumChoices([...numChoices, {place: 'CŒUR'}])}
+                  className="group cursor-pointer bg-white/5 p-8 rounded-[2.5rem] border border-white/5 hover:border-white/20 transition-all hover:bg-white/[0.08]"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="space-y-1">
+                      <span className="text-[11px] font-black uppercase tracking-widest block">Numérique</span>
+                      <span className="text-[8px] font-bold text-white/30 uppercase italic">Couleurs +</span>
+                    </div>
+                    <div className="bg-white/10 w-8 h-8 rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-[#002344] transition-colors text-xs font-black">+</div>
                   </div>
-                ))}
-              </div>
+                  
+                  {numChoices.length > 0 && (
+                    <div className="space-y-3 mt-6 pt-6 border-t border-white/10" onClick={(e) => e.stopPropagation()}>
+                      {numChoices.map((n, i) => (
+                        <div key={i} className="flex gap-2 animate-in slide-in-from-top-2">
+                          <select className="flex-1 bg-[#002344] py-2 px-3 rounded-xl text-[9px] font-black uppercase border border-white/10 text-white focus:ring-0 appearance-none" value={n.place} onChange={(e) => { const newC = [...numChoices]; newC[i].place = e.target.value; setNumChoices(newC); }}>{EMPLACEMENTS.map(e => <option key={e} value={e}>{e}</option>)}</select>
+                          <button onClick={() => setNumChoices(numChoices.filter((_, idx) => idx !== i))} className="text-red-400/50 hover:text-red-400 px-1 font-black">✕</button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
-              <div className="bg-white/5 p-8 rounded-[2.5rem] border border-white/5">
-                <div className="flex justify-between items-center mb-6">
-                  <span className="text-[11px] font-black uppercase tracking-widest">Broderie</span>
-                  <button onClick={() => setBroderieChoices([...broderieChoices, 0])} className="bg-white text-[#002344] text-[9px] px-5 py-2 rounded-full font-black hover:scale-105 transition-transform">AJOUTER</button>
-                </div>
-                {broderieChoices.map((b, i) => (
-                  <div key={i} className="flex gap-3 mb-3 animate-in slide-in-from-left-2 duration-300">
-                    <select className="flex-1 bg-[#002344] p-4 rounded-2xl text-[10px] font-black uppercase border-none text-white focus:ring-0" value={b} onChange={(e) => { const newC = [...broderieChoices]; newC[i] = Number(e.target.value); setBroderieChoices(newC); }}>
-                        <option value={0}>CŒUR</option>
-                        <option value={1}>CENTRAL</option>
-                        <option value={2}>DOS</option>
-                    </select>
-                    <button onClick={() => setBroderieChoices(broderieChoices.filter((_, idx) => idx !== i))} className="text-red-400 px-3 font-black text-xl hover:scale-110 transition-transform">✕</button>
+                {/* CARTE BRODERIE */}
+                <div 
+                  onClick={() => setBroderieChoices([...broderieChoices, 0])}
+                  className="group cursor-pointer bg-white/5 p-8 rounded-[2.5rem] border border-white/5 hover:border-white/20 transition-all hover:bg-white/[0.08]"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="space-y-1">
+                      <span className="text-[11px] font-black uppercase tracking-widest block">Broderie</span>
+                      <span className="text-[8px] font-bold text-white/30 uppercase italic">Premium</span>
+                    </div>
+                    <div className="bg-white/10 w-8 h-8 rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-[#002344] transition-colors text-xs font-black">+</div>
                   </div>
-                ))}
+                  
+                  {broderieChoices.length > 0 && (
+                    <div className="space-y-3 mt-6 pt-6 border-t border-white/10" onClick={(e) => e.stopPropagation()}>
+                      {broderieChoices.map((b, i) => (
+                        <div key={i} className="flex gap-2 animate-in slide-in-from-top-2">
+                          <select className="flex-1 bg-[#002344] py-2 px-3 rounded-xl text-[9px] font-black uppercase border border-white/10 text-white focus:ring-0 appearance-none" value={b} onChange={(e) => { const newC = [...broderieChoices]; newC[i] = Number(e.target.value); setBroderieChoices(newC); }}>
+                            <option value={0}>CŒUR</option>
+                            <option value={1}>CENTRAL</option>
+                            <option value={2}>DOS</option>
+                          </select>
+                          <button onClick={() => setBroderieChoices(broderieChoices.filter((_, idx) => idx !== i))} className="text-red-400/50 hover:text-red-400 px-1 font-black">✕</button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
