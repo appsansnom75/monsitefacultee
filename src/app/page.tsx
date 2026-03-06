@@ -16,11 +16,9 @@ const PRODUITS: Produit[] = [
 
 const FAQS = [
   { q: "Quels types de produits proposez-vous ?", a: "Nous proposons des T-shirts, sweats, polos, casquettes, tote bags et divers goodies personnalisables sur mesure." },
-  { q: "Quelles techniques de personnalisation utilisez-vous ?", a: "Nous utilisons la sérigraphie, la broderie, le flocage et l’impression numérique, et bien d'autres techniques selon les produits, vos besoins et votre budget." },
-  { q: "Quelle est la quantité minimum pour une commande ?", a: "Aucune quantité minimum obligatoire pour certaines références, et nous proposons des tarifs adaptés pour les commandes en petite ou grande série." },
-  { q: "Quels sont les délais de production et de livraison ?", a: "Le devis est généralement fourni sous 24h maximum, la production dure environ 5 à 7 jours ouvrés selon la quantité, et la livraison s’effectue en France et à l’international." },
-  { q: "Puis-je voir un aperçu de mon design avant de commander ?", a: "Oui ! Nous fournissons un aperçu numérique de votre design sur le produit choisi avant de lancer la production." },
-  { q: "Proposez-vous des produits éco-responsables ?", a: "Oui, nous proposons une sélection de produits biologiques et recyclés, ainsi que des techniques d’impression respectueuses de l’environnement." },
+  { q: "Quelles techniques de personnalisation utilisez-vous ?", a: "Nous utilisons la sérigraphie, la broderie, le flocage et l’impression numérique selon les besoins." },
+  { q: "Quelle est la quantité minimum ?", a: "Nous proposons des tarifs adaptés dès 10 unités pour la plupart des références." },
+  { q: "Délais de production ?", a: "Le devis est fourni sous 24h, la production dure environ 5 à 7 jours ouvrés." },
 ];
 
 const FORFAITS_SERIGRAPHIE = [
@@ -80,12 +78,12 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#002344] text-white selection:bg-white selection:text-[#002344] font-sans pb-12">
+    <div className="min-h-screen bg-[#002344] text-white font-sans pb-12">
       <div className="max-w-6xl mx-auto px-8 py-12">
         
         <header className="flex justify-between items-center mb-24">
-          <img src="/logoweb.jpg" alt="FACULTEE Logo" className="h-14 w-auto object-contain" />
-          <p className="text-[12px] font-black tracking-[0.4em] text-white/50 uppercase">Studio de Personnalisation Textile & Goodies</p>
+          <img src="/logoweb.jpg" alt="Logo" className="h-14 w-auto object-contain" />
+          <p className="text-[12px] font-black tracking-[0.4em] text-white/50 uppercase">Studio de Personnalisation</p>
         </header>
 
         <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.85] uppercase italic mb-20">
@@ -93,45 +91,50 @@ export default function HomePage() {
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
+          
           <div className="md:col-span-8 bg-white/5 rounded-[3.5rem] border border-white/10 p-12 space-y-12 shadow-2xl">
             
-            {/* 01. SELECTION PRODUIT */}
             <div className="space-y-6">
               <h2 className="text-3xl font-black uppercase tracking-tight">LE STUDIO</h2>
               <p className="text-[12px] font-black text-white/40 tracking-[0.3em] uppercase">01. Sélection du support</p>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {PRODUITS.map(p => (
-                  <button key={p.id} onClick={() => setProduitId(p.id)} className={`flex flex-col items-center p-6 rounded-3xl border transition-all ${produitId === p.id ? 'bg-white text-[#002344] border-white shadow-lg' : 'bg-transparent border-white/10 text-white hover:border-white/30'}`}>
+                  <button key={p.id} onClick={() => setProduitId(p.id)} className={`flex flex-col items-center p-6 rounded-[2rem] border transition-all ${produitId === p.id ? 'bg-white text-[#002344] border-white shadow-lg' : 'bg-transparent border-white/10 text-white hover:border-white/30'}`}>
                     <img src={p.image} alt={p.nom} className="h-20 w-auto mb-4 object-contain" />
                     <span className="text-[10px] font-black uppercase text-center leading-tight">{p.nom}</span>
                   </button>
                 ))}
-                <button onClick={() => setShowPopup(true)} className="flex flex-col items-center justify-center p-5 rounded-3xl border border-dashed border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-white transition-all group">
-                  <span className="text-[10px] font-black uppercase text-center leading-tight">Projet<br/>Sur-Mesure</span>
-                </button>
               </div>
             </div>
 
-            {/* 02. PERSONNALISATION */}
             <div className="space-y-8">
               <p className="text-[12px] font-black text-white/40 tracking-[0.3em] uppercase">02. Personnalisation technique</p>
+              
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
-                {/* CARTE SÉRIGRAPHIE */}
-                <div onClick={() => setSeriChoices([...seriChoices, {place: 'CŒUR', colors: 0}])} className="group cursor-pointer bg-white/5 p-8 rounded-[2.5rem] border border-white/5 hover:border-white/20 transition-all hover:bg-white/[0.08]">
-                  <div className="flex justify-between items-start mb-2">
+                {/* BOUTON SÉRIGRAPHIE UNIFORME */}
+                <div 
+                  onClick={() => setSeriChoices([...seriChoices, {place: 'CŒUR', colors: 0}])}
+                  className="group cursor-pointer bg-white/5 p-8 rounded-[2.5rem] border border-white/5 hover:border-white/20 transition-all hover:bg-white/[0.08]"
+                >
+                  <div className="flex justify-between items-center mb-2">
                     <div className="space-y-1">
                       <span className="text-[13px] font-black uppercase tracking-widest block">Sérigraphie</span>
                       <span className="text-[10px] font-bold text-white/30 uppercase italic">Volumes +</span>
                     </div>
-                    <div className="bg-white/10 w-10 h-10 rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-[#002344] transition-colors text-sm font-black">+</div>
+                    {/* Le + est maintenant fixe en taille et centré */}
+                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-[#002344] transition-all shrink-0 font-black text-lg">
+                      +
+                    </div>
                   </div>
+                  
                   {seriChoices.length > 0 && (
                     <div className="space-y-5 mt-6 pt-6 border-t border-white/10" onClick={(e) => e.stopPropagation()}>
                       {seriChoices.map((s, i) => (
                         <div key={i} className="space-y-2 animate-in slide-in-from-top-2 border-b border-white/5 pb-4 last:border-0">
                           <div className="flex items-center justify-between">
-                            <span className="text-[9px] font-black text-white/40 uppercase">Zone & Couleurs</span>
+                            <span className="text-[9px] font-black text-white/40 uppercase">Configuration</span>
                             <button onClick={() => setSeriChoices(seriChoices.filter((_, idx) => idx !== i))} className="text-red-400/50 hover:text-red-400 font-black text-sm">✕</button>
                           </div>
                           <select className="w-full bg-[#002344] py-3 px-4 rounded-xl text-[11px] font-black uppercase border border-white/10 text-white outline-none" value={s.place} onChange={(e) => { const newC = [...seriChoices]; newC[i].place = e.target.value; setSeriChoices(newC); }}>{EMPLACEMENTS.map(e => <option key={e} value={e}>{e}</option>)}</select>
@@ -142,14 +145,19 @@ export default function HomePage() {
                   )}
                 </div>
 
-                {/* CARTE NUMÉRIQUE */}
-                <div onClick={() => setNumChoices([...numChoices, {place: 'CŒUR'}])} className="group cursor-pointer bg-white/5 p-8 rounded-[2.5rem] border border-white/5 hover:border-white/20 transition-all hover:bg-white/[0.08]">
-                  <div className="flex justify-between items-start mb-2">
+                {/* BOUTON NUMÉRIQUE UNIFORME */}
+                <div 
+                  onClick={() => setNumChoices([...numChoices, {place: 'CŒUR'}])}
+                  className="group cursor-pointer bg-white/5 p-8 rounded-[2.5rem] border border-white/5 hover:border-white/20 transition-all hover:bg-white/[0.08]"
+                >
+                  <div className="flex justify-between items-center mb-2">
                     <div className="space-y-1">
                       <span className="text-[13px] font-black uppercase tracking-widest block">Numérique</span>
                       <span className="text-[10px] font-bold text-white/30 uppercase italic">Couleurs +</span>
                     </div>
-                    <div className="bg-white/10 w-10 h-10 rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-[#002344] transition-colors text-sm font-black">+</div>
+                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-[#002344] transition-all shrink-0 font-black text-lg">
+                      +
+                    </div>
                   </div>
                   {numChoices.length > 0 && (
                     <div className="space-y-4 mt-6 pt-6 border-t border-white/10" onClick={(e) => e.stopPropagation()}>
@@ -163,14 +171,19 @@ export default function HomePage() {
                   )}
                 </div>
 
-                {/* CARTE BRODERIE */}
-                <div onClick={() => setBroderieChoices([...broderieChoices, 0])} className="group cursor-pointer bg-white/5 p-8 rounded-[2.5rem] border border-white/5 hover:border-white/20 transition-all hover:bg-white/[0.08]">
-                  <div className="flex justify-between items-start mb-2">
+                {/* BOUTON BRODERIE UNIFORME */}
+                <div 
+                  onClick={() => setBroderieChoices([...broderieChoices, 0])}
+                  className="group cursor-pointer bg-white/5 p-8 rounded-[2.5rem] border border-white/5 hover:border-white/20 transition-all hover:bg-white/[0.08]"
+                >
+                  <div className="flex justify-between items-center mb-2">
                     <div className="space-y-1">
                       <span className="text-[13px] font-black uppercase tracking-widest block">Broderie</span>
                       <span className="text-[10px] font-bold text-white/30 uppercase italic">Premium</span>
                     </div>
-                    <div className="bg-white/10 w-10 h-10 rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-[#002344] transition-colors text-sm font-black">+</div>
+                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-[#002344] transition-all shrink-0 font-black text-lg">
+                      +
+                    </div>
                   </div>
                   {broderieChoices.length > 0 && (
                     <div className="space-y-4 mt-6 pt-6 border-t border-white/10" onClick={(e) => e.stopPropagation()}>
@@ -190,7 +203,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* 03. QUANTITE */}
             <div className="space-y-6 pt-6 border-t border-white/5">
                 <div className="flex justify-between items-end">
                     <span className="text-[12px] font-black uppercase tracking-[0.3em] text-white/40">03. Volume de commande</span>
@@ -200,7 +212,6 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* SIDEBAR ESTIMATION */}
           <div className="md:col-span-4 space-y-8 sticky top-12">
               <div className="bg-white text-[#002344] p-12 rounded-[3.5rem] shadow-2xl">
                 <p className="text-[12px] font-black text-[#002344]/40 uppercase tracking-widest text-center mb-8">Estimation TTC <br/><span className="text-[8px] opacity-60">Livraison offerte</span></p>
@@ -209,6 +220,7 @@ export default function HomePage() {
                   Recevoir mon devis
                 </button>
               </div>
+
               <a href="/guide.pdf" download className="group block bg-gradient-to-br from-[#00488d] to-[#002344] p-10 rounded-[3rem] border border-white/10 transition-all hover:scale-[0.98]">
                 <h3 className="text-3xl font-black uppercase leading-tight text-white mb-6">Besoin d'aide ?</h3>
                 <p className="text-[11px] font-bold text-white/50 tracking-widest uppercase mb-8">Le guide exclusif pour réussir votre configuration.</p>
@@ -219,7 +231,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* FAQ & FOOTER (IDENTIQUES) */}
+        {/* FAQ */}
         <div className="mt-40 space-y-12">
           <h2 className="text-5xl font-black uppercase italic tracking-tighter">Questions fréquentes</h2>
           <div className="grid grid-cols-1 gap-4">
@@ -238,26 +250,15 @@ export default function HomePage() {
         </div>
 
         <footer className="mt-20 border-t border-white/10 pt-20">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-20">
-            <div>
-              <img src="/logoweb.jpg" alt="Logo" className="h-12 w-auto mb-8 opacity-80" />
-              <p className="text-[11px] font-black text-white/40 uppercase tracking-widest">Facultee spécialisé dans la personnalisation textiles & goodies.</p>
-            </div>
-            <div className="space-y-4">
-              <h4 className="text-[11px] font-black uppercase tracking-[0.5em] text-white/80">Contact</h4>
-              <p className="text-sm font-black uppercase">Facultee@outlook.com</p>
-              <p className="text-sm font-black uppercase">06 37 84 58 16</p>
-            </div>
-            <div className="space-y-4">
-              <h4 className="text-[11px] font-black uppercase tracking-[0.5em] text-white/80">Réseaux</h4>
-              <a href="https://www.instagram.com/facultee.fr" target="_blank" className="block text-sm font-black uppercase">Instagram</a>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] font-black uppercase tracking-[0.5em] text-white/20">
+            <span>© 2026 FACULTEE </span>
+            <div className="flex gap-8">
+                <a href="https://www.instagram.com/facultee.fr" target="_blank" className="hover:text-white transition-colors">Instagram</a>
             </div>
           </div>
-          <p className="text-[10px] font-black uppercase tracking-[0.5em] text-white/20 text-center">© 2026 FACULTEE</p>
         </footer>
       </div>
 
-      {/* POPUP DEVIS */}
       {showPopup && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
           <div className="absolute inset-0 bg-[#002344]/95 backdrop-blur-md" onClick={() => setShowPopup(false)}></div>
